@@ -14,6 +14,7 @@
     "@deck.gl/layers": "^9.2.9",
     "@deck.gl/react": "^9.2.9",
     "leaflet": "^1.9.4",
+    "puppeteer": "^24.37.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1"
@@ -27,5 +28,10 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "vite": "^5.2.0"
-  }
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

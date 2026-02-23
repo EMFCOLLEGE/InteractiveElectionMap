@@ -1,27 +1,48 @@
 // src/Sidebar.jsx
 import React, { useState, useEffect } from 'react';
-import { federalPositions, statePositions, countyPositions, candidatesData } from './data';
+import { federalPositions, statePositions } from './data';
+import { useCandidates } from './useCandidates';
 
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
-  const [partyFilter, setPartyFilter] = useState('All'); // NEW: State for the party filter
+  const [partyFilter, setPartyFilter] = useState('All'); 
 
-  // Reset selection and filter when the view or state changes
+  // Call the custom hook to fetch live data!
+  const { candidatesData, dynamicCountyPositions, isLoading } = useCandidates();
+
   useEffect(() => {
     setSelectedPosition(null);
     setPartyFilter('All');
-  }, [viewLevel, selectedState]);
+  }, [viewLevel, selectedState, selectedCounty]);
 
   const renderHeader = () => {
     if (viewLevel === 'federal') return "United States";
     if (viewLevel === 'state') return statePositions[selectedState] ? "Texas State" : selectedState;
-    return `${selectedCounty}`;
+    return `${selectedCounty} County`;
   };
 
+  if (isLoading) {
+    return (
+      <div className="sidebar">
+        <div className="sidebar-header"><h1>Loading Database...</h1></div>
+        <p style={{ padding: '20px', color: '#666', fontStyle: 'italic' }}>Fetching candidates safely from the cloud...</p>
+      </div>
+    );
+  }
+
   const renderCandidateView = () => {
+    // Failsafe in case the data hasn't loaded properly for this specific position
+    if (!candidatesData || !candidatesData[selectedPosition.id]) {
+        return (
+          <div className="sidebar-content">
+            <button className="back-btn" onClick={() => setSelectedPosition(null)}>← Back</button>
+            <p>No candidate data available for this position.</p>
+          </div>
+        );
+    }
+
     const data = candidatesData[selectedPosition.id];
 
-    // NEW: Logic to filter candidates based on the dropdown selection
     const filterByParty = (person) => {
       if (partyFilter === 'All') return true;
       if (partyFilter === 'Republican' && person.party === 'Rep') return true;
@@ -30,7 +51,6 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
       return false;
     };
 
-    // Apply the filter to the data arrays
     const filteredCurrent = data?.current.filter(filterByParty) || [];
     const filteredCandidates = data?.candidates.filter(filterByParty) || [];
 
@@ -38,14 +58,13 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
       <div className="sidebar-content">
         <button className="back-btn" onClick={() => {
             setSelectedPosition(null);
-            setPartyFilter('All'); // Reset filter when going back
+            setPartyFilter('All'); 
         }}>
           ← Back
         </button>
         <h2 style={{color: 'var(--primary)'}}>{selectedPosition.title}</h2>
         <p>{selectedPosition.summary}</p>
         
-        {/* NEW: Party Filter Dropdown UI */}
         <div style={{ margin: '20px 0', padding: '10px', backgroundColor: '#e9ecef', borderRadius: '6px' }}>
           <label style={{ fontWeight: 'bold', marginRight: '10px', color: '#333' }}>
             Filter Party:
@@ -65,28 +84,19 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <h3 style={{marginTop: '20px'}}>Current Holder</h3>
         {filteredCurrent.length > 0 ? filteredCurrent.map((person, idx) => (
           <div key={idx} className="candidate-card" style={{borderLeft: `4px solid ${person.party === 'Rep' ? '#bf0a30' : person.party === 'Dem' ? '#002868' : '#888'}`}}>
-             
              <div className="candidate-profile-header">
-               <img 
-                 src={person.photoUrl || 'https://via.placeholder.com/150'} 
-                 alt={`Photo of ${person.name}`} 
-                 className="candidate-img" 
-               />
+               <img src={person.photoUrl || 'https://via.placeholder.com/150'} alt={person.name} className="candidate-img" />
                <strong style={{ fontSize: '1.2rem' }}>{person.name}</strong>
              </div>
-
              <div style={{ textAlign: 'center' }}>
                <span className="party-pill" style={{backgroundColor: person.party === 'Rep' ? '#bf0a30' : person.party === 'Dem' ? '#002868' : '#888'}}>
                  {person.party}
                </span>
-               
-               {/* NEW: Added the links to the Current Holder card */}
                <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
-                 {person.website && <a href={person.website} target="_blank" rel="noreferrer">Campaign Site</a>} 
-                 {person.website && person.openSecrets && " • "}
-                 {person.openSecrets && <a href={person.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
+                 {person.website && person.website !== '#' && <a href={person.website} target="_blank" rel="noreferrer">Contact/Site</a>} 
+                 {person.website && person.website !== '#' && person.openSecrets && person.openSecrets !== '#' && " • "}
+                 {person.openSecrets && person.openSecrets !== '#' && <a href={person.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
                </div>
-               
              </div>
           </div>
         )) : <p style={{ color: '#666', fontStyle: 'italic' }}>No matches found.</p>}
@@ -94,23 +104,18 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <h3 style={{marginTop: '20px'}}>Candidates</h3>
         {filteredCandidates.length > 0 ? filteredCandidates.map((cand, idx) => (
           <div key={idx} className="candidate-card" style={{borderLeft: `4px solid ${cand.party === 'Rep' ? '#bf0a30' : cand.party === 'Dem' ? '#002868' : '#888'}`}}>
-            
              <div className="candidate-profile-header">
-               <img 
-                 src={cand.photoUrl || 'https://via.placeholder.com/150'} 
-                 alt={`Photo of ${cand.name}`} 
-                 className="candidate-img" 
-               />
+               <img src={cand.photoUrl || 'https://via.placeholder.com/150'} alt={cand.name} className="candidate-img" />
                <h4 style={{ margin: '5px 0' }}>{cand.name}</h4>
              </div>
-
             <div style={{ textAlign: 'center' }}>
               <span className="party-pill" style={{backgroundColor: cand.party === 'Rep' ? '#bf0a30' : cand.party === 'Dem' ? '#002868' : '#888'}}>
                  {cand.party}
               </span>
               <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
-                <a href={cand.website} target="_blank" rel="noreferrer">Campaign Site</a> • 
-                <a href={cand.openSecrets} target="_blank" rel="noreferrer"> Funding Data</a>
+                 {cand.website && cand.website !== '#' && <a href={cand.website} target="_blank" rel="noreferrer">Contact/Site</a>} 
+                 {cand.website && cand.website !== '#' && cand.openSecrets && cand.openSecrets !== '#' && " • "}
+                 {cand.openSecrets && cand.openSecrets !== '#' && <a href={cand.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
               </div>
             </div>
           </div>
@@ -123,7 +128,8 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
     <div className="sidebar-content">
       {viewLevel !== 'federal' && <button className="back-btn" onClick={onBack}>← Zoom Out</button>}
       <p style={{fontStyle: 'italic', color: '#666'}}>Select a position below:</p>
-      {items ? items.map((pos) => (
+      
+      {items && items.length > 0 ? items.map((pos) => (
         <div key={pos.id} className="position-card" onClick={() => setSelectedPosition(pos)}>
           <h3>{pos.title}</h3>
           <div style={{fontSize: '0.9rem', color: '#555'}}>{pos.summary}</div>
@@ -142,8 +148,11 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <>
           {viewLevel === 'federal' && renderList(federalPositions)}
           {viewLevel === 'state' && selectedState === 'TX' && renderList(statePositions.TX)}
-          {viewLevel === 'state' && selectedState !== 'TX' && renderList(null, "Data coming soon for this state.")}
-          {viewLevel === 'county' && renderList(countyPositions.default)}
+          
+          {viewLevel === 'county' && renderList(
+            dynamicCountyPositions[selectedCounty], 
+            "No county-level candidates on file for this specific county."
+          )}
         </>
       )}
     </div>
