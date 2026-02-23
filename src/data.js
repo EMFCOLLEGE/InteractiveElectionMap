@@ -22,12 +22,18 @@ export const countyPositions = {
 };
 
 // Mock data for candidates
+
+/*Connect to a DB with all identifying information, such as
+website, portfolio picture, campaign fundraising, etc*/ 
 export const candidatesData = {
   gov: {
     current: [{ 
       name: 'Greg Abbott', 
       party: 'Rep', 
-      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/db/Greg_Abbott_at_NASA_2024_%28cropped%29.jpg'
+      photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/db/Greg_Abbott_at_NASA_2024_%28cropped%29.jpg',
+      website: 'https://gregabbott.com/',
+      openSecrets: 'https://www.opensecrets.org/search?q=greg+abbott&type=site'/*will search name on opensecrets website*/
+      /*might look something like 'opensecrets.org/search?q=' + p.name + '&type=site' --- but for now mock data */
     }],
     candidates: [
       { name: 'Candidate A', party: 'Dem', website: '#', openSecrets: '#', photoUrl: 'https://via.placeholder.com/150' },

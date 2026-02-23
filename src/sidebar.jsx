@@ -79,6 +79,14 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
                <span className="party-pill" style={{backgroundColor: person.party === 'Rep' ? '#bf0a30' : person.party === 'Dem' ? '#002868' : '#888'}}>
                  {person.party}
                </span>
+               
+               {/* NEW: Added the links to the Current Holder card */}
+               <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
+                 {person.website && <a href={person.website} target="_blank" rel="noreferrer">Campaign Site</a>} 
+                 {person.website && person.openSecrets && " • "}
+                 {person.openSecrets && <a href={person.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
+               </div>
+               
              </div>
           </div>
         )) : <p style={{ color: '#666', fontStyle: 'italic' }}>No matches found.</p>}
