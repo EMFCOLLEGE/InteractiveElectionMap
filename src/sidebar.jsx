@@ -5,7 +5,6 @@ import { federalPositions, statePositions, countyPositions, candidatesData } fro
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
 
-  // Reset local selection when the map view changes
   useEffect(() => {
     setSelectedPosition(null);
   }, [viewLevel, selectedState]);
@@ -27,23 +26,47 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <h3 style={{marginTop: '20px'}}>Current Holder</h3>
         {data?.current.map((person, idx) => (
           <div key={idx} className="candidate-card" style={{borderLeft: `4px solid ${person.party === 'Rep' ? '#bf0a30' : '#002868'}`}}>
-             <strong>{person.name}</strong> <br/>
-             <span className="party-pill" style={{backgroundColor: person.party === 'Rep' ? '#bf0a30' : '#002868'}}>
-               {person.party}
-             </span>
+             
+             {/* UPDATED: Image Placeholder and Name Layout */}
+             <div className="candidate-profile-header">
+               <img 
+                 src={person.photoUrl || 'https://via.placeholder.com/150'} 
+                 alt={`Photo of ${person.name}`} 
+                 className="candidate-img" 
+               />
+               <strong style={{ fontSize: '1.2rem' }}>{person.name}</strong>
+             </div>
+
+             <div style={{ textAlign: 'center' }}>
+               <span className="party-pill" style={{backgroundColor: person.party === 'Rep' ? '#bf0a30' : '#002868'}}>
+                 {person.party}
+               </span>
+             </div>
           </div>
         )) || <p>No data.</p>}
 
         <h3 style={{marginTop: '20px'}}>Candidates</h3>
         {data?.candidates.map((cand, idx) => (
           <div key={idx} className="candidate-card">
-            <h4>{cand.name}</h4>
-            <span className="party-pill" style={{backgroundColor: cand.party === 'Rep' ? '#bf0a30' : '#002868'}}>
-               {cand.party}
-            </span>
-            <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
-              <a href={cand.website} target="_blank">Campaign Site</a> • 
-              <a href={cand.openSecrets} target="_blank"> Funding Data</a>
+            
+            {/* UPDATED: Added Image to Candidates List as well */}
+             <div className="candidate-profile-header">
+               <img 
+                 src={cand.photoUrl || 'https://via.placeholder.com/150'} 
+                 alt={`Photo of ${cand.name}`} 
+                 className="candidate-img" 
+               />
+               <h4 style={{ margin: '5px 0' }}>{cand.name}</h4>
+             </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <span className="party-pill" style={{backgroundColor: cand.party === 'Rep' ? '#bf0a30' : '#002868'}}>
+                 {cand.party}
+              </span>
+              <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
+                <a href={cand.website} target="_blank" rel="noreferrer">Campaign Site</a> • 
+                <a href={cand.openSecrets} target="_blank" rel="noreferrer"> Funding Data</a>
+              </div>
             </div>
           </div>
         ))}
