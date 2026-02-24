@@ -14,18 +14,16 @@ export function useCandidates() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 1. PUT ALL YOUR RAW GIST URLS IN THIS ARRAY
     const gistUrls = [
       'https://raw.githubusercontent.com/EMFCOLLEGE/Texas-Election-API/refs/heads/main/DemCandidates2026.json',
       'https://raw.githubusercontent.com/EMFCOLLEGE/Texas-Election-API/refs/heads/main/RepCandidates2026.json'
-      // You can add as many URLs as you want here!
+
     ];
 
-    // 2. FETCH ALL URLS SIMULTANEOUSLY
+    
     Promise.all(gistUrls.map(url => fetch(url).then(res => res.json())))
       .then(results => {
-        // results is an array of arrays (e.g., [demArray, repArray])
-        // 3. MERGE THEM ALL INTO ONE MASSIVE LIST
+        
         const apiData = results.flat(); 
 
         const generatedCandidatesData = {
@@ -44,24 +42,38 @@ export function useCandidates() {
 
         const formatCountyName = (name) => name ? name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ') : "";
 
-        // ... THE REST OF YOUR LOGIC STAYS EXACTLY THE SAME!
-        // (Keep the apiData.forEach loop and everything below it)
-        // Process the API Data
+        
         apiData.forEach(row => {
           const rawOffice = row.txOfficeName?.trim() || "";
           const rawCounty = row.txCountyName?.trim() || "";
           const party = row.cdParty === 'D' ? 'Dem' : row.cdParty === 'R' ? 'Rep' : 'Other';
 
+          // NEW: Smartly extract the Year and the Election Type from the database string!
+          const yearMatch = row.txElectionName?.match(/\d{4}/);
+          const electionYear = yearMatch ? yearMatch[0] : "Unknown";
+          
+          let electionType = "Other";
+          const rawNameLower = row.txElectionName?.toLowerCase() || "";
+          if (rawNameLower.includes("primary")) electionType = "Primary";
+          else if (rawNameLower.includes("general")) electionType = "General";
+          else if (rawNameLower.includes("runoff")) electionType = "Runoff";
+
+          // Create the candidate object with our new properties
+          const newCandidate = {
+            name: row.txFullNameBallot,
+            party: party,
+            year: electionYear,         // NEW
+            type: electionType,         // NEW
+            electionName: row.txElectionName, // NEW
+            website: row.txEmail ? `mailto:${row.txEmail}` : '#',
+            openSecrets: `https://www.opensecrets.org/search?q=${row.txFirstNameBallot}+${row.txLastNameBallot}&type=site`,
+            photoUrl: `https://ui-avatars.com/api/?name=${row.txFirstNameBallot}+${row.txLastNameBallot}&background=random&color=fff&size=150`
+          };
+
           if (rawCounty === "STATEWIDE" || rawCounty === "DISTRICT" || rawCounty === "ALL" || !rawCounty) {
             const positionId = officeMapping[rawOffice];
             if (positionId && generatedCandidatesData[positionId]) {
-              generatedCandidatesData[positionId].candidates.push({
-                name: row.txFullNameBallot,
-                party: party,
-                website: row.txEmail ? `mailto:${row.txEmail}` : '#',
-                openSecrets: `https://www.opensecrets.org/search?q=${row.txFirstNameBallot}+${row.txLastNameBallot}&type=site`,
-                photoUrl: `https://ui-avatars.com/api/?name=${row.txFirstNameBallot}+${row.txLastNameBallot}&background=random&color=fff&size=150`
-              });
+              generatedCandidatesData[positionId].candidates.push(newCandidate);
             }
           } else {
             const countyName = formatCountyName(rawCounty);
@@ -79,13 +91,7 @@ export function useCandidates() {
               generatedCandidatesData[positionId] = { current: [], candidates: [] };
             }
             
-            generatedCandidatesData[positionId].candidates.push({
-              name: row.txFullNameBallot, 
-              party: party,
-              website: row.txEmail ? `mailto:${row.txEmail}` : '#',
-              openSecrets: `https://www.opensecrets.org/search?q=${row.txFirstNameBallot}+${row.txLastNameBallot}&type=site`,
-              photoUrl: `https://ui-avatars.com/api/?name=${row.txFirstNameBallot}+${row.txLastNameBallot}&background=random&color=fff&size=150`
-            });
+            generatedCandidatesData[positionId].candidates.push(newCandidate);
           }
         });
 

@@ -5,14 +5,25 @@ import { useCandidates } from './useCandidates';
 
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
+  
+  // 1. GET THE CURRENT YEAR DYNAMICALLY
+  const currentYear = new Date().getFullYear().toString();
+
+  // YOUR ACTIVE FILTERS
   const [partyFilter, setPartyFilter] = useState('All'); 
-
-  // Call the custom hook to fetch live data!
+  // 2. SET THE DEFAULT YEAR TO THE CURRENT YEAR
+  const [yearFilter, setYearFilter] = useState(currentYear); 
+  const [typeFilter, setTypeFilter] = useState('All'); 
+  
   const { candidatesData, dynamicCountyPositions, isLoading } = useCandidates();
-
+  
+  // Reset filters when changing views
   useEffect(() => {
     setSelectedPosition(null);
     setPartyFilter('All');
+    // 3. RESET TO CURRENT YEAR INSTEAD OF 'All'
+    setYearFilter(currentYear); 
+    setTypeFilter('Primary');
   }, [viewLevel, selectedState, selectedCounty]);
 
   const renderHeader = () => {
@@ -43,16 +54,24 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
 
     const data = candidatesData[selectedPosition.id];
 
-    const filterByParty = (person) => {
-      if (partyFilter === 'All') return true;
-      if (partyFilter === 'Republican' && person.party === 'Rep') return true;
-      if (partyFilter === 'Democrat' && person.party === 'Dem') return true;
-      if (partyFilter === 'Other' && !['Rep', 'Dem'].includes(person.party)) return true;
-      return false;
+    // Renamed from filterByParty to be a universal filter
+    const applyFilters = (person) => {
+      // 1. Party Filter
+      if (partyFilter === 'Republican' && person.party !== 'Rep') return false;
+      if (partyFilter === 'Democrat' && person.party !== 'Dem') return false;
+      if (partyFilter === 'Other' && ['Rep', 'Dem'].includes(person.party)) return false;
+
+      // 2. Year Filter (Only applies to challengers, not the hardcoded current incumbents)
+      if (yearFilter !== 'All' && person.year && person.year !== yearFilter) return false;
+
+      // 3. Election Type Filter
+      if (typeFilter !== 'All' && person.type && person.type !== typeFilter) return false;
+
+      return true;
     };
 
-    const filteredCurrent = data?.current.filter(filterByParty) || [];
-    const filteredCandidates = data?.candidates.filter(filterByParty) || [];
+    const filteredCurrent = data?.current.filter(applyFilters) || [];
+    const filteredCandidates = data?.candidates.filter(applyFilters) || [];
 
     return (
       <div className="sidebar-content">
@@ -65,20 +84,47 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <h2 style={{color: 'var(--primary)'}}>{selectedPosition.title}</h2>
         <p>{selectedPosition.summary}</p>
         
-        <div style={{ margin: '20px 0', padding: '10px', backgroundColor: '#e9ecef', borderRadius: '6px' }}>
-          <label style={{ fontWeight: 'bold', marginRight: '10px', color: '#333' }}>
-            Filter Party:
-          </label>
-          <select 
-            value={partyFilter} 
-            onChange={(e) => setPartyFilter(e.target.value)}
-            style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
-          >
-            <option value="All">All Parties</option>
-            <option value="Republican">Republican</option>
-            <option value="Democrat">Democrat</option>
-            <option value="Other">Other / Independent</option>
-          </select>
+        <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ fontWeight: 'bold', color: '#333', borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>
+            Election Filters
+          </div>
+          
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {/* PARTY DROPDOWN */}
+            <select 
+              value={partyFilter} 
+              onChange={(e) => setPartyFilter(e.target.value)}
+              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
+            >
+              <option value="All">All Parties</option>
+              <option value="Republican">Republican</option>
+              <option value="Democrat">Democrat</option>
+              <option value="Other">Other</option>
+            </select>
+
+            {/* YEAR DROPDOWN */}
+            <select 
+              value={yearFilter} 
+              onChange={(e) => setYearFilter(e.target.value)}
+              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
+            >
+              <option value="All">All Years</option>
+              <option value="2026">2026</option>
+              <option value="2028">2028</option>
+            </select>
+
+            {/* ELECTION TYPE DROPDOWN */}
+            <select 
+              value={typeFilter} 
+              onChange={(e) => setTypeFilter(e.target.value)}
+              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
+            >
+              <option value="All">All Types</option>
+              <option value="Primary">Primary</option>
+              <option value="Runoff">Runoff</option>
+              <option value="General">General</option>
+            </select>
+          </div>
         </div>
         
         <h3 style={{marginTop: '20px'}}>Current Holder</h3>
