@@ -23,5 +23,7 @@ Users can see who is the current holder of that office and who is in the running
 * Candidate pictures (if available)
 * Biographical information about candidate
 * Past voting trends (sort by election)
+* Printable cheat sheet to print out for ballot
+
 
 
