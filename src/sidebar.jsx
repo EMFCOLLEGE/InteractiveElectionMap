@@ -6,14 +6,12 @@ import { useCandidates } from './useCandidates';
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
   
-  // 1. GET THE CURRENT YEAR DYNAMICALLY
   const currentYear = new Date().getFullYear().toString();
 
-  // YOUR ACTIVE FILTERS
+  // Filters
   const [partyFilter, setPartyFilter] = useState('All'); 
-  // 2. SET THE DEFAULT YEAR TO THE CURRENT YEAR
   const [yearFilter, setYearFilter] = useState(currentYear); 
-  const [typeFilter, setTypeFilter] = useState('All'); 
+  const [typeFilter, setTypeFilter] = useState('Primary'); 
   
   const { candidatesData, dynamicCountyPositions, isLoading } = useCandidates();
   
@@ -21,28 +19,31 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
   useEffect(() => {
     setSelectedPosition(null);
     setPartyFilter('All');
-    // 3. RESET TO CURRENT YEAR INSTEAD OF 'All'
     setYearFilter(currentYear); 
     setTypeFilter('Primary');
   }, [viewLevel, selectedState, selectedCounty]);
 
   const renderHeader = () => {
     if (viewLevel === 'federal') return "United States";
-    if (viewLevel === 'state') return statePositions[selectedState] ? "Texas State" : selectedState;
+    if (viewLevel === 'state') return "Texas State";
     return `${selectedCounty} County`;
   };
 
-  if (isLoading) {
-    return (
-      <div className="sidebar">
-        <div className="sidebar-header"><h1>Loading Database...</h1></div>
-        <p style={{ padding: '20px', color: '#666', fontStyle: 'italic' }}>Fetching candidates safely from the cloud...</p>
-      </div>
-    );
-  }
+  // --- NEW: Skeleton Loading Component ---
+  const renderSkeleton = () => (
+    <div className="sidebar-content">
+      <div style={{ marginBottom: '20px', color: '#666' }}>Fetching database...</div>
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="skeleton-card">
+          <div className="skeleton" style={{ width: '100px', height: '100px', borderRadius: '50%', margin: '0 auto 10px auto' }}></div>
+          <div className="skeleton" style={{ width: '60%', height: '20px', margin: '0 auto 10px auto' }}></div>
+          <div className="skeleton" style={{ width: '40%', height: '15px', margin: '0 auto' }}></div>
+        </div>
+      ))}
+    </div>
+  );
 
   const renderCandidateView = () => {
-    // Failsafe in case the data hasn't loaded properly for this specific position
     if (!candidatesData || !candidatesData[selectedPosition.id]) {
         return (
           <div className="sidebar-content">
@@ -54,19 +55,12 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
 
     const data = candidatesData[selectedPosition.id];
 
-    // Renamed from filterByParty to be a universal filter
     const applyFilters = (person) => {
-      // 1. Party Filter
       if (partyFilter === 'Republican' && person.party !== 'Rep') return false;
       if (partyFilter === 'Democrat' && person.party !== 'Dem') return false;
       if (partyFilter === 'Other' && ['Rep', 'Dem'].includes(person.party)) return false;
-
-      // 2. Year Filter (Only applies to challengers, not the hardcoded current incumbents)
       if (yearFilter !== 'All' && person.year && person.year !== yearFilter) return false;
-
-      // 3. Election Type Filter
       if (typeFilter !== 'All' && person.type && person.type !== typeFilter) return false;
-
       return true;
     };
 
@@ -75,53 +69,30 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
 
     return (
       <div className="sidebar-content">
-        <button className="back-btn" onClick={() => {
-            setSelectedPosition(null);
-            setPartyFilter('All'); 
-        }}>
-          ← Back
+        <button className="back-btn" onClick={() => setSelectedPosition(null)}>
+          ← Back to List
         </button>
-        <h2 style={{color: 'var(--primary)'}}>{selectedPosition.title}</h2>
+        
+        <h2 style={{color: 'var(--primary)', marginTop: 0}}>{selectedPosition.title}</h2>
         <p>{selectedPosition.summary}</p>
         
-        <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ fontWeight: 'bold', color: '#333', borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>
-            Election Filters
-          </div>
-          
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {/* PARTY DROPDOWN */}
-            <select 
-              value={partyFilter} 
-              onChange={(e) => setPartyFilter(e.target.value)}
-              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
-            >
+        {/* Filters Panel */}
+        <div style={{ margin: '15px 0', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
+          <div style={{ fontSize: '0.9rem', fontWeight: 'bold', marginBottom: '10px' }}>Filters</div>
+          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+            <select value={partyFilter} onChange={(e) => setPartyFilter(e.target.value)} style={{ padding: '5px' }}>
               <option value="All">All Parties</option>
               <option value="Republican">Republican</option>
               <option value="Democrat">Democrat</option>
-              <option value="Other">Other</option>
             </select>
-
-            {/* YEAR DROPDOWN */}
-            <select 
-              value={yearFilter} 
-              onChange={(e) => setYearFilter(e.target.value)}
-              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
-            >
+            <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)} style={{ padding: '5px' }}>
               <option value="All">All Years</option>
               <option value="2026">2026</option>
               <option value="2028">2028</option>
             </select>
-
-            {/* ELECTION TYPE DROPDOWN */}
-            <select 
-              value={typeFilter} 
-              onChange={(e) => setTypeFilter(e.target.value)}
-              style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}
-            >
+            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} style={{ padding: '5px' }}>
               <option value="All">All Types</option>
               <option value="Primary">Primary</option>
-              <option value="Runoff">Runoff</option>
               <option value="General">General</option>
             </select>
           </div>
@@ -139,9 +110,12 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
                  {person.party}
                </span>
                <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
-                 {person.website && person.website !== '#' && <a href={person.website} target="_blank" rel="noreferrer">Contact/Site</a>} 
-                 {person.website && person.website !== '#' && person.openSecrets && person.openSecrets !== '#' && " • "}
-                 {person.openSecrets && person.openSecrets !== '#' && <a href={person.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
+                 {/* Explicit Website/Funding Links */}
+                 {person.website && person.website !== '#' && <a href={person.website} target="_blank" rel="noreferrer" style={{color: 'var(--primary)', fontWeight: 'bold'}}>Website</a>} 
+                 
+                 {person.website && person.website !== '#' && person.openSecrets && person.openSecrets !== '#' && " | "}
+                 
+                 {person.openSecrets && person.openSecrets !== '#' && <a href={person.openSecrets} target="_blank" rel="noreferrer" style={{color: 'var(--primary)', fontWeight: 'bold'}}>Funding</a>}
                </div>
              </div>
           </div>
@@ -159,9 +133,11 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
                  {cand.party}
               </span>
               <div style={{marginTop: '10px', fontSize: '0.9rem'}}>
-                 {cand.website && cand.website !== '#' && <a href={cand.website} target="_blank" rel="noreferrer">Contact/Site</a>} 
-                 {cand.website && cand.website !== '#' && cand.openSecrets && cand.openSecrets !== '#' && " • "}
-                 {cand.openSecrets && cand.openSecrets !== '#' && <a href={cand.openSecrets} target="_blank" rel="noreferrer">Funding Data</a>}
+                 {cand.website && cand.website !== '#' && <a href={cand.website} target="_blank" rel="noreferrer" style={{color: 'var(--primary)', fontWeight: 'bold'}}>Website</a>} 
+                 
+                 {cand.website && cand.website !== '#' && cand.openSecrets && cand.openSecrets !== '#' && " | "}
+                 
+                 {cand.openSecrets && cand.openSecrets !== '#' && <a href={cand.openSecrets} target="_blank" rel="noreferrer" style={{color: 'var(--primary)', fontWeight: 'bold'}}>Funding</a>}
               </div>
             </div>
           </div>
@@ -172,7 +148,13 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
 
   const renderList = (items, emptyMsg) => (
     <div className="sidebar-content">
-      {viewLevel !== 'federal' && <button className="back-btn" onClick={onBack}>← Zoom Out</button>}
+      {/* 2. FEATURE: Back Navigation Button */}
+      {viewLevel !== 'federal' && (
+        <button className="back-btn" onClick={onBack}>
+          ← Zoom Out
+        </button>
+      )}
+      
       <p style={{fontStyle: 'italic', color: '#666'}}>Select a position below:</p>
       
       {items && items.length > 0 ? items.map((pos) => (
@@ -190,14 +172,19 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <h1>{renderHeader()}</h1>
       </div>
       
-      {selectedPosition ? renderCandidateView() : (
+      {/* 1. FEATURE: Skeleton Loading Logic */}
+      {isLoading ? renderSkeleton() : (
         <>
-          {viewLevel === 'federal' && renderList(federalPositions)}
-          {viewLevel === 'state' && selectedState === 'TX' && renderList(statePositions.TX)}
-          
-          {viewLevel === 'county' && renderList(
-            dynamicCountyPositions[selectedCounty], 
-            "No county-level candidates on file for this specific county."
+          {selectedPosition ? renderCandidateView() : (
+            <>
+              {viewLevel === 'federal' && renderList(federalPositions)}
+              {viewLevel === 'state' && selectedState === 'TX' && renderList(statePositions.TX)}
+              
+              {viewLevel === 'county' && renderList(
+                dynamicCountyPositions[selectedCounty], 
+                "No county-level candidates on file for this specific county."
+              )}
+            </>
           )}
         </>
       )}

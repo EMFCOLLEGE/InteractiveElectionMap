@@ -55,17 +55,37 @@ export default function MapDisplay({ viewLevel, selectedState, onSelectState, on
       .then(data => setUsData(data));
   }, []);
 
+// 2. Fetch TX Counties (With Animation Delay)
   useEffect(() => {
     if (viewLevel === 'state' || viewLevel === 'county') {
-      fetch('https://raw.githubusercontent.com/Cincome/tx.geojson/master/counties/tx_counties.geojson')
+      
+      // Flag to prevent updates if user clicks "Back" quickly
+      let isMounted = true; 
+
+      // A. Start fetching data
+      const dataPromise = fetch('https://raw.githubusercontent.com/Cincome/tx.geojson/master/counties/tx_counties.geojson')
         .then(res => {
           if (!res.ok) { throw new Error("HTTP error " + res.status); }
           return res.json();
-        })
-        .then(data => {
+        });
+
+      // B. Start a timer matching the zoom duration (1.5s)
+      const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
+
+      // C. Wait for BOTH to finish before showing the map
+      Promise.all([dataPromise, delayPromise])
+        .then(([data]) => {
+          if (isMounted) {
             setTxCountyData(data);
+          }
         })
         .catch(err => console.error("Error loading counties:", err));
+
+      // Cleanup function
+      return () => { isMounted = false; };
+    } else {
+      // If zooming OUT, clear the counties immediately so they disappear
+      setTxCountyData(null);
     }
   }, [viewLevel]);
 
