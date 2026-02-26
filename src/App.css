@@ -158,3 +158,84 @@ body {
     background-position-x: -200%;
   }
 }
+
+/* --- LANDING PAGE OVERLAY --- */
+.landing-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(49, 56, 58, 0.527); /* Dark Charcoal transparent */
+  z-index: 9999; /* On top of everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px); /* Blurs the map behind it */
+  animation: fadeIn 0.5s ease-out;
+}
+
+.landing-card {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  border-top: 6px solid var(--primary); /* Red accent bar */
+}
+
+.landing-title {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-family: 'Georgia', serif; /* Official look */
+}
+
+.landing-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  font-weight: 300;
+}
+
+.landing-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.landing-instructions {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: left;
+  border-left: 4px solid var(--primary);
+}
+
+.enter-btn {
+  background-color: var(--primary); /* Red */
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 15px rgba(191, 10, 48, 0.3);
+}
+
+.enter-btn:hover {
+  background-color: #2d3436;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
