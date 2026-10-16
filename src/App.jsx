@@ -83,6 +83,7 @@ function App() {
         selectedState={selectedState} 
         selectedCounty={selectedCounty}
         onBack={handleBack}
+        onSelectState={handleStateSelect}
       />
       
       <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column' }}>
