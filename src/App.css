@@ -53,24 +53,37 @@ body {
 
 /* Cards & Items */
 .position-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
   background: white;
+  border: none;
   border-left: 5px solid var(--primary);
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.position-card:hover {
+.position-card:hover,
+.position-card:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .position-card h3 {
-  margin: 0 0 5px 0;
+  margin: 0 0 4px 0;
+  font-size: 1rem;
   color: var(--primary);
+}
+
+.race-meta {
+  font-size: 0.85rem;
+  color: #555;
 }
 
 .back-btn {
@@ -91,42 +104,121 @@ body {
   background-color: #eee;
 }
 
-/* Candidate Styles (Original Centered Look) */
+/* Race list */
+.race-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.race-group {
+  margin-bottom: 15px;
+}
+
+.race-group summary {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.05rem;
+  padding: 6px 0;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+
+.race-group-count {
+  font-weight: normal;
+  font-size: 0.85rem;
+  color: #777;
+  margin-left: 4px;
+}
+
+.race-title {
+  color: var(--primary);
+  margin: 0 0 8px 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  margin-right: 6px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  background: #e9ecef;
+  color: #333;
+}
+
+.muted { color: #666; }
+.small { font-size: 0.85rem; }
+.error-text { color: var(--accent); }
+
+.data-footer {
+  margin-top: 25px;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+  font-size: 0.8rem;
+  color: #777;
+  line-height: 1.5;
+}
+
+.data-footer a { color: inherit; }
+
+/* Candidate cards */
 .candidate-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
   border: 1px solid #eee;
-  padding: 15px;
+  padding: 12px 15px;
   margin-top: 10px;
   background: white;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.candidate-profile-header {
+.candidate-avatar {
+  flex: 0 0 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #dfe6e9;
+  color: var(--primary);
+  font-weight: bold;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  margin-bottom: 10px;
+  justify-content: center;
 }
 
-.candidate-img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  object-position: top;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  border: 3px solid #eee;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.candidate-info h4 {
+  margin: 2px 0 6px 0;
+  font-size: 1.05rem;
+}
+
+.candidate-tags {
+  margin-bottom: 6px;
+}
+
+.candidate-links {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.candidate-links a {
+  color: var(--primary);
+  font-weight: bold;
 }
 
 .party-pill {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 1px 8px;
+  margin-right: 6px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: white;
-  margin-bottom: 5px;
 }
 
 /* --- MAP --- */
@@ -145,7 +237,7 @@ body {
 }
 
 .skeleton-card {
-  height: 160px; /* Approx height of a candidate card */
+  height: 50px; /* Approx height of a race card */
   margin-bottom: 15px;
   background: white;
   border-radius: 4px;
