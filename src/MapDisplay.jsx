@@ -139,8 +139,9 @@ export default function MapDisplay({ viewLevel, selectedState, onSelectState, on
         maxBounds={[[24, -125], [50, -66]]} 
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; OpenStreetMap contributors'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+          attribution='Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS user community'
+          maxZoom={16}
         />
         
         <ZoomHandler viewLevel={viewLevel} selectedState={selectedState} />
