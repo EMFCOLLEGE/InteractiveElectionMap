@@ -14,7 +14,6 @@
     "@deck.gl/layers": "^9.2.9",
     "@deck.gl/react": "^9.2.9",
     "leaflet": "^1.9.4",
-    "puppeteer": "^24.37.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1"
