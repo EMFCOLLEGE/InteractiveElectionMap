@@ -1,5 +1,5 @@
 // src/MapDisplay3D.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 

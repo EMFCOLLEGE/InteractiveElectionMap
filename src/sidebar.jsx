@@ -1,5 +1,5 @@
 // src/Sidebar.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { federalPositions, statePositions } from './data';
 import { useCandidates } from './useCandidates';
 
