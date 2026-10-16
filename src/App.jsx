@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import Sidebar from './sidebar';
 import MapDisplay from './MapDisplay';
