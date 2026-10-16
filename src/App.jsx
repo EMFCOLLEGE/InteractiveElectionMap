@@ -27,9 +27,9 @@ function LandingPage({ onEnter }) {
         <div className="landing-instructions">
           <strong>How to use this map:</strong>
           <ul style={{ margin: '10px 0 0 20px', padding: 0 }}>
-            <li>📍 <strong>Explore:</strong> Click on Texas to see county-level data.</li>
-            <li>🏛️ <strong>Discover:</strong> Select a position in the sidebar to see candidates.</li>
-            <li>🗳️ <strong>Analyze:</strong> Use filters to sort by party or election year.</li>
+            <li>📍 <strong>Explore:</strong> Click on Texas to see every race on its Nov 3 ballot.</li>
+            <li>🏛️ <strong>Discover:</strong> Pick a race to see every candidate, including third-party and write-in candidates.</li>
+            <li>🔎 <strong>Search:</strong> Find an office or candidate by name, or click a county for local races.</li>
           </ul>
         </div>
 
@@ -83,6 +83,7 @@ function App() {
         selectedState={selectedState} 
         selectedCounty={selectedCounty}
         onBack={handleBack}
+        onSelectState={handleStateSelect}
       />
       
       <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column' }}>
