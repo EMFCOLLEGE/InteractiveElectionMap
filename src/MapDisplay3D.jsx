@@ -15,7 +15,7 @@ function getPopulationColor(pop) {
                          [255, 237, 160];
 }
 
-export default function MapDisplay3D({ viewLevel, onSelectCounty }) {
+export default function MapDisplay3D({ onSelectCounty }) {
   const [txCountyData, setTxCountyData] = useState(null);
   const [popData2025, setPopData2025] = useState({}); // Stores the CSV data
 
