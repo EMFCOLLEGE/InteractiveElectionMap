@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { federalPositions, statePositions } from './data';
 import { useCandidates } from './useCandidates';
 
+const currentYear = new Date().getFullYear().toString();
+
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack }) {
   const [selectedPosition, setSelectedPosition] = useState(null);
-  
-  const currentYear = new Date().getFullYear().toString();
 
   // Filters
   const [partyFilter, setPartyFilter] = useState('All'); 
