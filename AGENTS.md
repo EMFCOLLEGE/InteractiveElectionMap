@@ -47,7 +47,14 @@ Vercel deploys with the default Vite preset (`npm run build`, output `dist/`).
 
 ```
 index.html                 Vite entry
-2024_txpopest_county.csv   TX county population estimates (Texas Demographic Center), used by the 3D heatmap
+public/
+  2024_txpopest_county.csv TX county population estimates (Texas Demographic Center), used by the 3D heatmap
+  data/<state>.json        Generated election data (see docs/data-schema.md). Don't hand-edit
+scripts/
+  fetch-<state>.mjs        Pulls official data for one state and writes public/data/<state>.json
+  lib/normalize.mjs        Shared helpers (title casing, website cleanup, race sorting, file writing)
+docs/
+  data-schema.md           The normalized election data format
 src/
   main.jsx                 React root
   App.jsx                  Landing page + top-level view state (federal -> state -> county), 3D toggle
@@ -78,9 +85,18 @@ src/
 |---|---|
 | US state shapes | `PublicaMundi/MappingAPI` us-states.json (raw GitHub) |
 | TX county shapes | `Cincome/tx.geojson` tx_counties.geojson (raw GitHub) |
-| Candidates | `EMFCOLLEGE/Texas-Election-API` (raw GitHub) |
-| County population | `2024_txpopest_county.csv` (local) |
+| Candidates (legacy, still used by the UI) | `EMFCOLLEGE/Texas-Election-API` (raw GitHub), a Feb 2026 snapshot of TX primary filings |
+| Candidates (TX, new) | Texas SOS candidate API at `goelect.txelections.civixapps.com/api-ivis-cbp/api/cbp` (`getElectionsByYear/<year>`, `POST findQualifiedCandidates`), pulled by `npm run data:tx` |
+| County population | `public/2024_txpopest_county.csv` |
 | Candidate photos | Mostly `ui-avatars.com` placeholders; one Wikimedia image |
+
+## Election data pipeline
+
+- Run `npm run data:<state>` (e.g. `npm run data:tx`) to regenerate `public/data/<state>.json`, then commit the script change and the data change as **separate commits**.
+- Data is curated to **federal, statewide, and state legislative races** in every target state. Texas also includes county and judicial races because the SOS feed has them for free.
+- Only accepted filings are included. Candidates are ordered by the state's ballot party order, never by anything else.
+- Incumbency comes from the source (`incumbent: true`). A race with no incumbent is an open seat. **Don't hardcode officeholders.**
+- Address lookup (Phase 2) will use the **Census Geocoder** (free, no key) to turn an address into congressional and state legislative districts, which match on `category` + `district`. It will also use **Google Civic `voterInfoQuery`** (free, key stored as a Vercel env var and called only from `api/`) for full local ballots and polling places.
 
 ## Conventions and gotchas
 
@@ -120,10 +136,11 @@ Ordered by what matters most before **Nov 3, 2026**. Phase 0–1 items are launc
 - [ ] Sort out Vercel: decide which project owns `votermap.vercel.app`, connect it to this GitHub repo for auto-deploys from `main` and preview deploys on PRs, and redeploy (the live site is from Feb 2026 and predates the landing page)
 
 ### Phase 1: Own the data and support multiple states (launch blocker)
-- [ ] Define a **normalized, state-agnostic data schema** (state → offices → races → candidates, with party, incumbent flag, source URL, and last-updated date) and store it in this repo under `public/data/<state>.json`
-- [ ] Build a small script (`scripts/`) per source that writes the normalized JSON, so data is reproducible and reviewable in PRs
-- [ ] Sources for the Nov 3 general ballot: each state's Secretary of State certified candidate list (statewide and legislative), the FEC API (U.S. Senate and House), and the Google Civic Information API `voterInfoQuery` (contests on the ballot for a specific address, close to election day; check what coverage it has now)
-- [ ] Migrate Texas off `Texas-Election-API` to the new schema with **general election** nominees
+- [x] Define a **normalized, state-agnostic data schema** (`docs/data-schema.md`) stored under `public/data/<state>.json`
+- [x] Build a small script (`scripts/`) per source that writes the normalized JSON, so data is reproducible and reviewable in PRs
+- [x] Texas general election data from the official SOS API (`npm run data:tx`): 3,179 races and 3,922 candidates, including the two Nov 3 special elections
+- [ ] Sources for the other states' Nov 3 ballots: each state's Secretary of State certified candidate list (federal, statewide, legislative), with the FEC API as a cross-check for U.S. Senate and House
+- [ ] Switch the UI from `Texas-Election-API` to `public/data/tx.json`, and remove `useCandidates.js`'s hardcoded incumbents and office mapping
 - [ ] Make the map, sidebar, and CSV joins state-generic: no `'TX'` or `'Texas'` hardcoding, and per-state county GeoJSON and bounds
 - [ ] Add states in priority order: **GA → MI → NC → AZ → WI → PA → NV → ME → NH → OH**
 - [ ] Highlight supported states on the national map and show an inline "Coming soon" for the rest
