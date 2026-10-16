@@ -1,5 +1,5 @@
 // src/sidebar.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { STATES, countyKey } from './states';
 import { useElectionData } from './useElectionData';
 import RaceList from './RaceList';
@@ -35,11 +35,17 @@ function DataFooter({ data }) {
 export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack, onSelectState }) {
   const [selectedRace, setSelectedRace] = useState(null);
   const { data, error, isLoading } = useElectionData(selectedState);
+  const contentRef = useRef(null);
 
   // Leaving a state or county closes any open race.
   useEffect(() => {
     setSelectedRace(null);
   }, [viewLevel, selectedState, selectedCounty]);
+
+  // Start each view at the top instead of keeping the previous view's scroll position.
+  useEffect(() => {
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  }, [selectedRace, viewLevel, selectedState, selectedCounty]);
 
   const stateName = STATES[selectedState]?.name ?? selectedState;
   const header =
@@ -94,7 +100,7 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
       <div className="sidebar-header">
         <h1>{header}</h1>
       </div>
-      <div className="sidebar-content">{renderBody()}</div>
+      <div className="sidebar-content" ref={contentRef}>{renderBody()}</div>
     </div>
   );
 }
