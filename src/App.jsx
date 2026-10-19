@@ -3,17 +3,21 @@ import { lazy, Suspense, useState } from 'react';
 import './App.css';
 import Sidebar from './sidebar';
 import MapDisplay from './MapDisplay';
+import AddressSearch from './AddressSearch';
+import { useAddressLookup } from './useAddressLookup';
 
 const MapDisplay3D = lazy(() => import('./MapDisplay3D'));
 
 // --- NEW: Landing Page Component ---
-function LandingPage({ onEnter }) {
+function LandingPage({ onEnter, search }) {
   return (
     <div className="landing-overlay">
       <div className="landing-card">
         <h1 className="landing-title">Interactive Election Map</h1>
         <p className="landing-subtitle">Democracy is in the details.</p>
         
+        <AddressSearch {...search} heading />
+
         <div className="landing-body">
           <p>
             Welcome to the <strong>Interactive Election Map</strong>. Our goal is to make it easier 
@@ -50,20 +54,42 @@ function App() {
   const [viewLevel, setViewLevel] = useState('federal'); 
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCounty, setSelectedCounty] = useState(null);
-  const [is3DMode, setIs3DMode] = useState(false); 
+  const [is3DMode, setIs3DMode] = useState(false);
+  const [addressLookup, setAddressLookup] = useState(null);
+  const search = useAddressLookup((result) => {
+    setAddressLookup(result);
+    setSelectedState('TX');
+    setSelectedCounty(result.county);
+    setViewLevel('address');
+    setIs3DMode(false);
+    setShowLanding(false);
+  });
+  const clearAddress = () => {
+    search.clear();
+    setAddressLookup(null);
+    setSelectedCounty(null);
+    setViewLevel(selectedState ? 'state' : 'federal');
+  }; 
 
   const handleStateSelect = (stateCode) => {
+    search.clear();
+    setAddressLookup(null);
+    setSelectedCounty(null);
     setSelectedState(stateCode);
     setViewLevel('state');
   };
 
   const handleCountySelect = (countyName) => {
+    search.clear();
+    setAddressLookup(null);
     setSelectedCounty(countyName);
     setViewLevel('county');
   };
 
   const handleBack = () => {
-    if (viewLevel === 'county') {
+    if (viewLevel === 'address') {
+      clearAddress();
+    } else if (viewLevel === 'county') {
       setViewLevel('state');
       setSelectedCounty(null);
     } else if (viewLevel === 'state') {
@@ -77,7 +103,7 @@ function App() {
     <div className="app-container">
       
       {/* 2. Show Landing Page if state is true */}
-      {showLanding && <LandingPage onEnter={() => setShowLanding(false)} />}
+      {showLanding && <LandingPage onEnter={() => setShowLanding(false)} search={search} />}
 
       <Sidebar 
         viewLevel={viewLevel} 
@@ -85,12 +111,15 @@ function App() {
         selectedCounty={selectedCounty}
         onBack={handleBack}
         onSelectState={handleStateSelect}
+        addressLookup={addressLookup}
+        onClearAddress={clearAddress}
+        search={search}
       />
       
       <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column' }}>
         
         {/* 3D Toggle (Only visible for Texas) */}
-        {selectedState === 'TX' && (
+        {selectedState === 'TX' && !addressLookup && (
           <div style={{
             position: 'absolute',
             top: '20px',
@@ -127,7 +156,8 @@ function App() {
         ) : (
           <MapDisplay 
             viewLevel={viewLevel} 
-            selectedState={selectedState}   
+            selectedState={selectedState}
+            addressLookup={addressLookup}
             onSelectState={handleStateSelect}
             onSelectCounty={handleCountySelect}
           />

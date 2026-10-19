@@ -331,3 +331,25 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+/* Address entry stays usable on narrow screens, in every view. */
+.address-search { text-align: left; margin-bottom: 20px; }
+.address-search h2 { margin: 0 0 14px; font-size: 1.3rem; }
+.address-search label { display: block; font-weight: 600; margin-bottom: 6px; }
+.address-input-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.address-input-row input { flex: 1 1 210px; min-width: 0; box-sizing: border-box; border: 1px solid #888; border-radius: 4px; padding: 11px; font: inherit; }
+.address-input-row button { border: 0; border-radius: 4px; background: var(--primary); color: white; padding: 11px 14px; font: inherit; cursor: pointer; }
+.address-input-row button:disabled { opacity: .7; cursor: wait; }
+.address-search :focus-visible { outline: 3px solid #176baf; outline-offset: 2px; }
+.address-privacy { margin: 8px 0; line-height: 1.4; }
+.sidebar { flex-shrink: 0; min-width: 0; }
+.landing-overlay { overflow-y: auto; box-sizing: border-box; padding: 20px; }
+.landing-card { box-sizing: border-box; max-height: calc(100dvh - 40px); overflow-y: auto; }
+@media (max-width: 600px) {
+  .sidebar { width: min(400px, 100vw); }
+  .sidebar-content { padding: 16px; }
+  .landing-card { width: 100%; padding: 20px; }
+  .landing-title { font-size: 1.65rem; }
+  .landing-body, .landing-instructions { margin-bottom: 16px; }
+  .address-input-row button { width: 100%; }
+  .candidate-info { min-width: 0; overflow-wrap: anywhere; }
+}

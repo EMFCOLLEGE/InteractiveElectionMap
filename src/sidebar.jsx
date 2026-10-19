@@ -4,6 +4,7 @@ import { STATES, countyKey } from './states';
 import { useElectionData } from './useElectionData';
 import RaceList from './RaceList';
 import RaceDetail from './RaceDetail';
+import AddressSearch from './AddressSearch';
 
 const formatDate = (iso, opts) => new Date(iso).toLocaleDateString('en-US', { timeZone: 'UTC', ...opts });
 
@@ -32,7 +33,7 @@ function DataFooter({ data }) {
   );
 }
 
-export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack, onSelectState }) {
+export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack, onSelectState, search }) {
   const [selectedRace, setSelectedRace] = useState(null);
   const { data, error, isLoading } = useElectionData(selectedState);
   const contentRef = useRef(null);
@@ -100,7 +101,10 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
       <div className="sidebar-header">
         <h1>{header}</h1>
       </div>
-      <div className="sidebar-content" ref={contentRef}>{renderBody()}</div>
+      <div className="sidebar-content" ref={contentRef}>
+        <AddressSearch {...search} />
+        {renderBody()}
+      </div>
     </div>
   );
 }
