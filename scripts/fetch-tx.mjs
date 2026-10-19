@@ -4,6 +4,8 @@
 //   node scripts/fetch-tx.mjs
 //
 // Source UI: https://goelect.txelections.civixapps.com/ivis-cbp-ui/candidate-information
+import { readFile } from 'node:fs/promises';
+import { resolveFecIds } from './lib/fec.mjs';
 import { PARTY_NAMES, normalizeWebsite, slugify, titleCase, writeStateFile } from './lib/normalize.mjs';
 
 const API = 'https://goelect.txelections.civixapps.com/api-ivis-cbp/api/cbp';
@@ -120,6 +122,9 @@ async function main() {
     race.candidates.forEach((c) => delete c.sortKey);
   }
 
+  const overrides = JSON.parse(await readFile(new URL('./data/fec-overrides.json', import.meta.url), 'utf8'));
+  await resolveFecIds([...races.values()], { state: 'TX', year: ELECTION_YEAR, overrides });
+
   const outPath = await writeStateFile('TX', {
     state: 'TX',
     stateName: 'Texas',
@@ -130,7 +135,10 @@ async function main() {
       type: 'general',
     },
     generatedAt: new Date().toISOString(),
-    sources: [{ name: 'Texas Secretary of State – Candidate Information', url: SOURCE_UI }],
+    sources: [
+      { name: 'Texas Secretary of State – Candidate Information', url: SOURCE_UI },
+      { name: 'Federal Election Commission – Candidate IDs', url: 'https://www.fec.gov/data/candidates/?state=TX&cycle=2026' },
+    ],
     specialElections: specials.map((e) => titleCase(e.txElectionName)),
     races: [...races.values()],
   });

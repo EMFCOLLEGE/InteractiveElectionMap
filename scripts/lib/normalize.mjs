@@ -39,11 +39,15 @@ export function titleCase(text) {
 export function normalizeWebsite(raw) {
   if (!raw) return null;
   let url = raw.trim();
-  if (!url || /\s/.test(url)) return null;
+  if (!url || /[\s@\\]/.test(url)) return null;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url) && !/^https?:\/\//i.test(url)) return null;
   if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
   try {
     const parsed = new URL(url);
-    if (!parsed.hostname.includes('.')) return null;
+    if (!['https:', 'http:'].includes(parsed.protocol) || parsed.username || parsed.password) return null;
+    if (!parsed.hostname.split('.').every((label) => /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i.test(label)) ||
+        !/\.[a-z]{2,}$/i.test(parsed.hostname)) return null;
+    parsed.protocol = 'https:';
     return parsed.href;
   } catch {
     return null;
