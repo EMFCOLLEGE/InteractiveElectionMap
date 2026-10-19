@@ -1,9 +1,10 @@
 // src/App.jsx
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import './App.css';
 import Sidebar from './sidebar';
 import MapDisplay from './MapDisplay';
-import MapDisplay3D from './MapDisplay3D'; 
+
+const MapDisplay3D = lazy(() => import('./MapDisplay3D'));
 
 // --- NEW: Landing Page Component ---
 function LandingPage({ onEnter }) {
@@ -115,12 +116,14 @@ function App() {
 
         {/* Map Logic */}
         {is3DMode && selectedState === 'TX' ? (
-          <MapDisplay3D 
-            viewLevel={viewLevel} 
-            selectedState={selectedState}
-            onSelectState={handleStateSelect}
-            onSelectCounty={handleCountySelect}
-          />
+          <Suspense fallback={<p role="status">Loading 3D map…</p>}>
+            <MapDisplay3D
+              viewLevel={viewLevel}
+              selectedState={selectedState}
+              onSelectState={handleStateSelect}
+              onSelectCounty={handleCountySelect}
+            />
+          </Suspense>
         ) : (
           <MapDisplay 
             viewLevel={viewLevel} 
