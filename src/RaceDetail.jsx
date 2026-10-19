@@ -12,10 +12,7 @@ const initials = (name) =>
     .join('')
     .toUpperCase();
 
-// FEC is the official campaign finance source for federal candidates.
-const fecSearchUrl = (name) => `https://www.fec.gov/data/candidates/?search=${encodeURIComponent(name.replace(/"[^"]*"/g, ''))}`;
-
-function CandidateCard({ candidate, isFederal }) {
+function CandidateCard({ candidate, isFederal, cycle }) {
   const color = partyColor(candidate.party);
 
   return (
@@ -30,8 +27,8 @@ function CandidateCard({ candidate, isFederal }) {
         {candidate.occupation && <div className="muted small">{candidate.occupation}</div>}
         <div className="candidate-links">
           {candidate.website && <a href={candidate.website} target="_blank" rel="noreferrer">Website</a>}
-          {isFederal && !candidate.writeIn && (
-            <a href={fecSearchUrl(candidate.name)} target="_blank" rel="noreferrer">Campaign finance (FEC)</a>
+          {isFederal && candidate.fecId && cycle && (
+            <a href={`https://www.fec.gov/data/candidate/${candidate.fecId}/?cycle=${cycle}&election_full=true`} target="_blank" rel="noreferrer">Campaign finance (FEC)</a>
           )}
         </div>
       </div>
@@ -39,10 +36,11 @@ function CandidateCard({ candidate, isFederal }) {
   );
 }
 
-export default function RaceDetail({ race, onBack }) {
+export default function RaceDetail({ race, electionDate, onBack }) {
   const onBallot = race.candidates.filter((c) => !c.writeIn);
   const writeIns = race.candidates.filter((c) => c.writeIn);
   const isFederal = race.level === 'federal';
+  const cycle = new Date(electionDate).getUTCFullYear();
   const hasIncumbent = race.candidates.some((c) => c.incumbent);
 
   return (
@@ -58,14 +56,14 @@ export default function RaceDetail({ race, onBack }) {
 
       <h3>On the ballot</h3>
       {onBallot.length > 0
-        ? onBallot.map((c) => <CandidateCard key={c.ballotName + c.party} candidate={c} isFederal={isFederal} />)
+        ? onBallot.map((c) => <CandidateCard key={c.ballotName + c.party} candidate={c} isFederal={isFederal} cycle={cycle} />)
         : <p className="muted">Only write-in candidates have filed for this race.</p>}
 
       {writeIns.length > 0 && (
         <>
           <h3>Declared write-in candidates</h3>
           <p className="muted small">These names won&apos;t be printed on the ballot, but votes written in for them will be counted.</p>
-          {writeIns.map((c) => <CandidateCard key={c.ballotName + c.party} candidate={c} isFederal={isFederal} />)}
+          {writeIns.map((c) => <CandidateCard key={c.ballotName + c.party} candidate={c} isFederal={isFederal} cycle={cycle} />)}
         </>
       )}
     </div>

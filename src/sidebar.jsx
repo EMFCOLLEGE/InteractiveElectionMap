@@ -71,7 +71,7 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
     if (error) return <p className="error-text">Couldn&apos;t load ballot data. Please refresh to try again.</p>;
     if (!data) return <p className="muted">No ballot data for this state yet.</p>;
 
-    if (selectedRace) return <RaceDetail race={selectedRace} onBack={() => setSelectedRace(null)} />;
+    if (selectedRace) return <RaceDetail race={selectedRace} electionDate={data.election.date} onBack={() => setSelectedRace(null)} />;
 
     const races =
       viewLevel === 'county'
