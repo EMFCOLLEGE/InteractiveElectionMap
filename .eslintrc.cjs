@@ -13,7 +13,7 @@ module.exports = {
   plugins: ['react-refresh'],
   overrides: [
     {
-      files: ['scripts/**/*.mjs'],
+      files: ['scripts/**/*.mjs', 'server/**/*.js', 'api/**/*.js', 'tests/**/*.js'],
       env: { node: true, browser: false },
     },
   ],
