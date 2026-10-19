@@ -353,3 +353,13 @@ body {
   .address-input-row button { width: 100%; }
   .candidate-info { min-width: 0; overflow-wrap: anywhere; }
 }
+.address-ballot { line-height: 1.5; overflow-wrap: anywhere; }
+.address-ballot h2 { margin: 0 0 10px; font-size: 1.4rem; }
+.matched-address { font-weight: 600; }
+.ballot-disclaimer { background: #edf3f8; border-left: 3px solid #176baf; padding: 10px 12px; margin-bottom: 20px; font-size: .9rem; }
+.ballot-disclaimer p { margin: 0 0 8px; }
+.ballot-disclaimer p:last-child { margin-bottom: 0; }
+.ballot-disclaimer a, .ballot-map-sources a { color: #174b7a; }
+.other-county-races { border-top: 2px solid #999; padding-top: 14px; margin-top: 24px; }
+.other-county-races > summary, .ballot-map-sources > summary { cursor: pointer; font-weight: 600; }
+.ballot-map-sources { margin-top: 20px; font-size: .85rem; }
