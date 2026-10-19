@@ -63,6 +63,12 @@ function App() {
     setViewLevel('address');
     setIs3DMode(false);
     setShowLanding(false);
+  }, () => {
+    if (addressLookup) {
+      setAddressLookup(null);
+      setSelectedCounty(null);
+      setViewLevel('state');
+    }
   });
   const clearAddress = () => {
     search.clear();
@@ -87,6 +93,7 @@ function App() {
   };
 
   const handleBack = () => {
+    search.clear();
     if (viewLevel === 'address') {
       clearAddress();
     } else if (viewLevel === 'county') {

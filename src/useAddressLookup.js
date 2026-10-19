@@ -12,13 +12,15 @@ const ERRORS = {
   DISTRICT_AMBIGUOUS: 'This location is on a district boundary. Confirm your districts with your county elections office.',
 };
 
-export function useAddressLookup(onSuccess) {
+export function useAddressLookup(onSuccess, onStart) {
   const [address, setAddress] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const request = useRef(null);
   const success = useRef(onSuccess);
   success.current = onSuccess;
+  const start = useRef(onStart);
+  start.current = onStart;
   useEffect(() => () => request.current?.abort(), []);
 
   const cancel = () => {
@@ -31,6 +33,7 @@ export function useAddressLookup(onSuccess) {
   const submit = async (event) => {
     event.preventDefault();
     cancel();
+    start.current?.();
     const value = address.trim();
     if (!value) { setError(ERRORS.MISSING_ADDRESS); return; }
     if (/^\d{5}(?:-\d{4})?$/.test(value)) { setError(ERRORS.STREET_ADDRESS_REQUIRED); return; }

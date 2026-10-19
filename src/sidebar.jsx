@@ -90,7 +90,7 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
 
     if (viewLevel === 'address' && addressLookup) return (
       <>
-        <AddressBallot data={data} lookup={addressLookup} onClear={onClearAddress}
+        <AddressBallot data={data} lookup={addressLookup} onClear={() => { onClearAddress(); contentRef.current?.querySelector('.address-search input')?.focus(); }}
           onSelect={(race, unconfirmed) => { setUnconfirmedRace(unconfirmed); setSelectedRace(race); }} />
         <DataFooter data={data} />
       </>
