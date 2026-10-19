@@ -1,0 +1,56 @@
+{
+  "us-senate": {
+    "KEN PAXTON": {
+      "fecId": "S6TX00388",
+      "source": "https://www.fec.gov/data/candidate/S6TX00388/",
+      "note": "FEC lists Warren Kenneth Paxton Jr.; authorized committee is Ken Paxton for Senate."
+    },
+    "TED BROWN": {
+      "fecId": "S4TX00888",
+      "source": "https://www.fec.gov/data/candidate/S4TX00888/",
+      "note": "FEC lists Theodore E. Brown Jr.; authorized committee is Ted Brown Election Committee."
+    }
+  },
+  "us-house-4": {
+    "PAT FALLON": {
+      "fecId": "H0TX04219",
+      "source": "https://www.fec.gov/data/candidate/H0TX04219/",
+      "note": "FEC lists Patrick Fallon, Texas district 4."
+    }
+  },
+  "us-house-6": {
+    "JAKE ELLZEY": {
+      "fecId": "H8TX06266",
+      "source": "https://www.fec.gov/data/candidate/H8TX06266/",
+      "note": "FEC lists John Kevin Ellzey Sr.; authorized committee is Jake Ellzey for Congress."
+    }
+  },
+  "us-house-7": {
+    "LIZZIE PANNILL FLETCHER": {
+      "fecId": "H8TX07140",
+      "source": "https://www.fec.gov/data/candidate/H8TX07140/",
+      "note": "FEC lists Elizabeth Fletcher; authorized committee is Elizabeth Pannill Fletcher for Congress."
+    }
+  },
+  "us-house-9": {
+    "ALEX MEALER": {
+      "fecId": "H6TX09140",
+      "source": "https://www.fec.gov/data/candidate/H6TX09140/",
+      "note": "FEC lists Alexandra Mealer, Texas district 9."
+    }
+  },
+  "us-house-24": {
+    "BETH VAN DUYNE": {
+      "fecId": "H0TX24209",
+      "source": "https://www.fec.gov/data/candidate/H0TX24209/",
+      "note": "FEC lists Elizabeth Ann Van Duyne; authorized committee is Beth Van Duyne for Congress."
+    }
+  },
+  "us-house-31": {
+    "GREG STOKER": {
+      "fecId": "H6TX31169",
+      "source": "https://www.fec.gov/data/candidate/H6TX31169/",
+      "note": "FEC lists Gregory James Stoker; authorized committee is Campaign Committee for Greg Stoker."
+    }
+  }
+}
