@@ -1,9 +1,11 @@
 import { ballotForAddress } from './ballotForAddress';
 import RaceList from './RaceList';
+import { countyElectionLink } from './countyElectionLinks';
 
 export default function AddressBallot({ data, lookup, onSelect, onClear }) {
   const { races, otherCountyRaces } = ballotForAddress(data, lookup);
   const districts = lookup.districts;
+  const countyOffice = countyElectionLink(lookup.county);
   return (
     <section className="address-ballot" aria-labelledby="ballot-heading">
       <div role="status" aria-live="polite" aria-atomic="true">
@@ -17,10 +19,10 @@ export default function AddressBallot({ data, lookup, onSelect, onClear }) {
         <p>Districts are based on official maps; confirm with your official sample ballot.</p>
         <p>
           <a href="https://teamrv-mvp.sos.texas.gov/MVP/mvp.do" target="_blank" rel="noreferrer">Texas SOS My Voter Portal</a>
-          {' · '}<a href={`https://www.sos.state.tx.us/elections/voter/county.shtml#${lookup.county[0].toUpperCase()}`} target="_blank" rel="noreferrer">Find your {lookup.county} County elections office (SOS directory)</a>
+          {' · '}<a href={countyOffice.url} target="_blank" rel="noreferrer">{countyOffice.label}</a>
         </p>
         <p>Judicial district races are not yet included; check your sample ballot.</p>
-        <p className="small">City, school district, other local elections, and propositions are also outside this guide. A district with no race up this election is omitted.</p>
+        <p className="small">Street geocoding can be approximate. City, school district, other local elections, and propositions are also outside this guide. A district with no race up this election is omitted.</p>
       </div>
       <RaceList races={races} onSelect={(race) => onSelect(race, false)} />
       {otherCountyRaces.length > 0 && (
