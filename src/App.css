@@ -365,3 +365,19 @@ body {
 .ballot-map-sources { margin-top: 20px; font-size: .85rem; }
 .address-map-marker { display: grid; place-items: center; }
 .address-map-marker span { display: block; width: 16px; height: 16px; border: 3px solid white; border-radius: 50%; background: #176baf; box-shadow: 0 1px 6px #222; }
+
+/* --- HOW TO VOTE --- */
+.voting-info { background: white; border: 1px solid #d8dee4; border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-size: .9rem; line-height: 1.45; }
+.voting-info > summary { cursor: pointer; font-weight: 700; font-size: 1rem; }
+.voting-info p { margin: 10px 0 0; }
+.voting-info a { color: #174b7a; }
+.voting-status { font-weight: 600; padding: 8px 10px; border-radius: 4px; background: #edf3f8; }
+.voting-status-early, .voting-status-election-day { background: #e6f4ea; color: #1e5631; }
+.voting-dates { margin: 10px 0 0; }
+.voting-dates > div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid #eee; }
+.voting-dates dt { font-weight: 500; }
+.voting-dates dd { margin: 0; text-align: right; white-space: nowrap; }
+.voting-dates .passed { color: #888; text-decoration: line-through; }
+.voting-links { margin: 10px 0 0; padding-left: 18px; }
+.voting-links li { margin: 3px 0; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
