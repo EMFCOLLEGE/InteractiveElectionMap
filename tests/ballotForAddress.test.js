@@ -15,7 +15,7 @@ test('select statewide, correct district and countywide races without changing o
   assert.ok(races.some((r) => /Supreme Court/.test(r.office)));
   assert.ok(races.some((r) => /Court of Criminal Appeals/.test(r.office)));
   assert.ok(races.some((r) => r.office === 'County Judge' && r.county === 'Fort Bend'));
-  assert.ok(!races.some((r) => r.category === 'judicial'));
+  assert.ok(!races.some((r) => r.category === 'judicial' && !/Fort Bend County/.test(r.office)));
   assert.ok(!races.some((r) => /Precinct|Constable|Justice of the Peace/.test(r.office)));
   assert.ok(otherCountyRaces.some((r) => /Commissioner Precinct/.test(r.office)));
   assert.ok(otherCountyRaces.every((r) => r.county === 'Fort Bend'));
@@ -51,4 +51,20 @@ test('fail closed without a Texas/county lookup and never match null districts',
   assert.deepEqual(ballotForAddress(data, { ...lookup, state: 'NY' }), { races: [], otherCountyRaces: [] });
   const { races } = ballotForAddress(data, { ...lookup, districts: {} });
   assert.ok(!races.some((r) => ['us_house', 'state_senate', 'state_house', 'state_board'].includes(r.category)));
+});
+
+test('include criminal district attorney and court races named for the county only', () => {
+  const judicial = (county) => ballotForAddress(data, { ...lookup, county }).races
+    .filter((r) => r.category === 'judicial').map((r) => r.office);
+  assert.deepEqual(judicial('Bexar County'), ['Criminal District Attorney Bexar County']);
+  const dallas = judicial('Dallas');
+  assert.ok(dallas.includes('Criminal District Attorney Dallas County'));
+  assert.ok(dallas.filter((o) => /^Criminal District Judge,? Dallas County Number \d+$/.test(o)).length >= 4);
+  assert.ok(dallas.every((o) => /Dallas County/.test(o)));
+  const tarrant = judicial('Tarrant County');
+  assert.ok(tarrant.includes('Criminal District Attorney Tarrant County'));
+  assert.ok(tarrant.some((o) => /^Criminal District Judge #\d+ Tarrant County$/.test(o)));
+  assert.ok(judicial('Jefferson').includes('Criminal District Judge Jefferson County'));
+  assert.deepEqual(judicial('Fort Bend County'), []);
+  assert.ok(!judicial('Harris').some((o) => /District Judge, \d+/.test(o)));
 });
