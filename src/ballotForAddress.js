@@ -9,6 +9,10 @@ const COUNTYWIDE_OFFICES = new Set([
 ]);
 const countywide = (office) => COUNTYWIDE_OFFICES.has(office) ||
   /^(?:Judge, )?(?:County (?:Civil |Criminal )?Court(?: of Appeals| at Law)?|(?:County )?Probate Court)(?: at Law)?(?: No\. \d+)?$/.test(office);
+// Criminal district attorneys and criminal district courts named for one county
+// ("Criminal District Attorney Bexar County", "Criminal District Judge, Dallas County Number 1").
+const SINGLE_COUNTY_JUDICIAL = /^Criminal District (?:Attorney|Judge)(?:,| #\d+)? (.+?) County(?: Number \d+)?$/;
+const judicialCounty = (office) => SINGLE_COUNTY_JUDICIAL.exec(office)?.[1] ?? null;
 const DISTRICT_CATEGORIES = new Set(['us_house', 'state_senate', 'state_house', 'state_board']);
 const districtKey = (value) => /^\d+$/.test(String(value)) ? String(Number(value)) : null;
 
@@ -28,7 +32,10 @@ export function ballotForAddress(data, lookup) {
       // A county match does not establish precinct eligibility. Keep these separate.
       otherCountyRaces.push(race);
     }
-    // Judicial districts overlap counties and need a separate authoritative mapping.
+    if (race.category === 'judicial' && countyKey(judicialCounty(race.office)) === countyKey(lookup.county)) {
+      return true;
+    }
+    // Other judicial districts overlap counties and need a separate authoritative mapping.
     return false;
   });
   return { races, otherCountyRaces };
