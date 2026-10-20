@@ -1,4 +1,6 @@
 import { countyKey } from './states.js';
+import { judicialDistrictKey } from './judicialOffice.js';
+import { TX_JUDICIAL_DISTRICTS } from './txJudicialDistricts.js';
 
 // County offices vs precinct offices: Texas Election Code 52.092(e)-(f).
 // https://statutes.capitol.texas.gov/Docs/EL/htm/EL.52.htm#52.092
@@ -13,6 +15,9 @@ const countywide = (office) => COUNTYWIDE_OFFICES.has(office) ||
 // ("Criminal District Attorney Bexar County", "Criminal District Judge, Dallas County Number 1").
 const SINGLE_COUNTY_JUDICIAL = /^Criminal District (?:Attorney|Judge)(?:,| #\d+)? (.+?) County(?: Number \d+)?$/;
 const judicialCounty = (office) => SINGLE_COUNTY_JUDICIAL.exec(office)?.[1] ?? null;
+// District courts: every voter in each county of the judicial district votes (Gov't Code ch. 24).
+const inJudicialDistrict = (office, county) =>
+  (TX_JUDICIAL_DISTRICTS[judicialDistrictKey(office)] ?? []).some((c) => countyKey(c) === countyKey(county));
 const DISTRICT_CATEGORIES = new Set(['us_house', 'state_senate', 'state_house', 'state_board']);
 const districtKey = (value) => /^\d+$/.test(String(value)) ? String(Number(value)) : null;
 
@@ -32,10 +37,10 @@ export function ballotForAddress(data, lookup) {
       // A county match does not establish precinct eligibility. Keep these separate.
       otherCountyRaces.push(race);
     }
-    if (race.category === 'judicial' && countyKey(judicialCounty(race.office)) === countyKey(lookup.county)) {
-      return true;
+    // Courts of appeals and judicial-district attorneys still need their own sourced county mappings.
+    if (race.category === 'judicial') {
+      return countyKey(judicialCounty(race.office)) === countyKey(lookup.county) || inJudicialDistrict(race.office, lookup.county);
     }
-    // Other judicial districts overlap counties and need a separate authoritative mapping.
     return false;
   });
   return { races, otherCountyRaces };
