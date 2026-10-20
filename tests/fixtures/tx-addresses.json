@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Houston City Hall",
+    "address": "901 Bagby St, Houston, TX 77002",
+    "addressSource": "https://www.houstontx.gov/mayor/map.html",
+    "matchedAddress": "901 BAGBY ST, HOUSTON, TX, 77002",
+    "lat": 29.760724420884,
+    "lng": -95.369483289562,
+    "county": "Harris",
+    "expected": {
+      "us_house": "18",
+      "state_senate": "13",
+      "state_house": "147",
+      "state_board": "4"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.369483289562%2C%22y%22%3A29.760724420884%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.369483289562%2C%22y%22%3A29.760724420884%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.369483289562%2C%22y%22%3A29.760724420884%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.369483289562%2C%22y%22%3A29.760724420884%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:05.817Z"
+  },
+  {
+    "name": "Dallas City Hall",
+    "address": "1500 Marilla St, Dallas, TX 75201",
+    "addressSource": "https://dallascityhall.com/Pages/contact.aspx",
+    "matchedAddress": "1500 MARILLA ST, DALLAS, TX, 75201",
+    "lat": 32.776661403645,
+    "lng": -96.795838517178,
+    "county": "Dallas",
+    "expected": {
+      "us_house": "33",
+      "state_senate": "23",
+      "state_house": "114",
+      "state_board": "13"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-96.795838517178%2C%22y%22%3A32.776661403645%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-96.795838517178%2C%22y%22%3A32.776661403645%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-96.795838517178%2C%22y%22%3A32.776661403645%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-96.795838517178%2C%22y%22%3A32.776661403645%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:06.292Z"
+  },
+  {
+    "name": "Texas Capitol",
+    "address": "1100 Congress Ave, Austin, TX 78701",
+    "addressSource": "https://tspb.texas.gov/plan/hours/hours.html",
+    "matchedAddress": "1100 CONGRESS AVE, AUSTIN, TX, 78701",
+    "lat": 30.27644199222,
+    "lng": -97.739754035328,
+    "county": "Travis",
+    "expected": {
+      "us_house": "10",
+      "state_senate": "14",
+      "state_house": "49",
+      "state_board": "5"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.739754035328%2C%22y%22%3A30.27644199222%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.739754035328%2C%22y%22%3A30.27644199222%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.739754035328%2C%22y%22%3A30.27644199222%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.739754035328%2C%22y%22%3A30.27644199222%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:06.686Z"
+  },
+  {
+    "name": "Bexar County Courthouse",
+    "address": "100 Dolorosa, San Antonio, TX 78205",
+    "addressSource": "https://www.bexar.org/2946/County-Clerk",
+    "matchedAddress": "100 DOLOROSA, SAN ANTONIO, TX, 78205",
+    "lat": 29.424206087348,
+    "lng": -98.493261420826,
+    "county": "Bexar",
+    "expected": {
+      "us_house": "20",
+      "state_senate": "26",
+      "state_house": "123",
+      "state_board": "3"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.493261420826%2C%22y%22%3A29.424206087348%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.493261420826%2C%22y%22%3A29.424206087348%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.493261420826%2C%22y%22%3A29.424206087348%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.493261420826%2C%22y%22%3A29.424206087348%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:07.210Z"
+  },
+  {
+    "name": "Blanco County Courthouse",
+    "address": "101 E Pecan St, Johnson City, TX 78636",
+    "addressSource": "https://www.blancocountytexas.gov/page/contact",
+    "matchedAddress": "101 E PECAN DR, JOHNSON CITY, TX, 78636",
+    "lat": 30.277760059384,
+    "lng": -98.411940371501,
+    "county": "Blanco",
+    "expected": {
+      "us_house": "21",
+      "state_senate": "25",
+      "state_house": "19",
+      "state_board": "5"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.411940371501%2C%22y%22%3A30.277760059384%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.411940371501%2C%22y%22%3A30.277760059384%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.411940371501%2C%22y%22%3A30.277760059384%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.411940371501%2C%22y%22%3A30.277760059384%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:07.542Z"
+  },
+  {
+    "name": "Cameron County Dancy Building",
+    "address": "1100 E Monroe St, Brownsville, TX 78520",
+    "addressSource": "https://www.cameroncountytx.gov/directory/",
+    "matchedAddress": "1100 E MONROE ST, BROWNSVILLE, TX, 78520",
+    "lat": 25.904789008577,
+    "lng": -97.495452381424,
+    "county": "Cameron",
+    "expected": {
+      "us_house": "34",
+      "state_senate": "27",
+      "state_house": "38",
+      "state_board": "2"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.495452381424%2C%22y%22%3A25.904789008577%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.495452381424%2C%22y%22%3A25.904789008577%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.495452381424%2C%22y%22%3A25.904789008577%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-97.495452381424%2C%22y%22%3A25.904789008577%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:07.882Z"
+  },
+  {
+    "name": "Fort Bend County Courthouse",
+    "address": "401 Jackson St, Richmond, TX 77469",
+    "addressSource": "https://www.fortbendcountytx.gov/contact/county-courthouse",
+    "matchedAddress": "401 JACKSON ST, RICHMOND, TX, 77469",
+    "lat": 29.582050526369,
+    "lng": -95.761454917059,
+    "county": "Fort Bend",
+    "expected": {
+      "us_house": "22",
+      "state_senate": "18",
+      "state_house": "26",
+      "state_board": "7"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.761454917059%2C%22y%22%3A29.582050526369%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.761454917059%2C%22y%22%3A29.582050526369%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.761454917059%2C%22y%22%3A29.582050526369%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-95.761454917059%2C%22y%22%3A29.582050526369%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:08.322Z"
+  },
+  {
+    "name": "McAllen City Hall",
+    "address": "1300 Houston Ave, McAllen, TX 78501",
+    "addressSource": "https://www.mcallen.net/",
+    "matchedAddress": "1300 W HOUSTON AVE, MCALLEN, TX, 78501",
+    "lat": 26.196594798278,
+    "lng": -98.234625755494,
+    "county": "Hidalgo",
+    "expected": {
+      "us_house": "28",
+      "state_senate": "20",
+      "state_house": "41",
+      "state_board": "2"
+    },
+    "tlcQueries": {
+      "us_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+5481+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.234625755494%2C%22y%22%3A26.196594798278%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_senate": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3686+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.234625755494%2C%22y%22%3A26.196594798278%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_house": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3925+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.234625755494%2C%22y%22%3A26.196594798278%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false",
+      "state_board": "https://giswebe.tlc.texas.gov/ArcGIS/rest/services/plan_shaded/MapServer/0/query?f=json&where=REDAPPL_PLAN_ID+%3D+3688+AND+DISTRICT+%3E+0&geometry=%7B%22x%22%3A-98.234625755494%2C%22y%22%3A26.196594798278%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=District&returnGeometry=false"
+    },
+    "verifiedAt": "2026-10-19T22:10:08.643Z"
+  }
+]

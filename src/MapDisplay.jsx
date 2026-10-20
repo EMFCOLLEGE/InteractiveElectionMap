@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet'; 
+import L from 'leaflet';
+import { countyKey } from './states'; 
 
 function InsetControls({ onSelectState }) {
   const gulfPosition = [27, -88]; 
@@ -27,11 +28,17 @@ function InsetControls({ onSelectState }) {
   );
 }
 
-function ZoomHandler({ viewLevel, selectedState }) {
+function ZoomHandler({ viewLevel, selectedState, addressLookup, txCountyData }) {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedState === 'AK') {
+    if (addressLookup) {
+      const county = txCountyData?.features.find((feature) => countyKey(feature.properties.COUNTY || feature.properties.name) === countyKey(addressLookup.county));
+      if (county) {
+        const bounds = L.geoJSON(county).getBounds().extend([addressLookup.lat, addressLookup.lng]);
+        map.flyToBounds(bounds, { padding: [35, 35], maxZoom: 12, duration: 1 });
+      } else map.flyTo([addressLookup.lat, addressLookup.lng], 11, { duration: 1 });
+    } else if (selectedState === 'AK') {
        map.setView([64, -150], 4); 
     } else if (selectedState === 'HI') {
        map.setView([20.5, -157.5], 6);
@@ -40,12 +47,12 @@ function ZoomHandler({ viewLevel, selectedState }) {
     } else if (viewLevel === 'state' && selectedState === 'TX') {
        map.flyToBounds([[25.83, -106.64], [36.5, -93.5]], { padding: [50, 50], duration: 1.5 });
     }
-  }, [viewLevel, selectedState, map]);
+  }, [viewLevel, selectedState, addressLookup, txCountyData, map]);
 
   return null;
 }
 
-export default function MapDisplay({ viewLevel, selectedState, onSelectState, onSelectCounty }) {
+export default function MapDisplay({ viewLevel, selectedState, onSelectState, onSelectCounty, addressLookup }) {
   const [usData, setUsData] = useState(null);
   const [txCountyData, setTxCountyData] = useState(null);
 
@@ -57,7 +64,7 @@ export default function MapDisplay({ viewLevel, selectedState, onSelectState, on
 
 // 2. Fetch TX Counties (With Animation Delay)
   useEffect(() => {
-    if (viewLevel === 'state' || viewLevel === 'county') {
+    if (viewLevel === 'state' || viewLevel === 'county' || viewLevel === 'address') {
       
       // Flag to prevent updates if user clicks "Back" quickly
       let isMounted = true; 
@@ -116,7 +123,7 @@ export default function MapDisplay({ viewLevel, selectedState, onSelectState, on
           } else {
              alert(`You clicked ${feature.properties.name}. Only Texas is active in this demo!`);
           }
-        } else if (viewLevel === 'state' || viewLevel === 'county') {
+        } else if (viewLevel === 'state' || viewLevel === 'county' || viewLevel === 'address') {
           const props = feature.properties;
           const rawName = props.COUNTY || props.name || "Unknown County";
           const cleanName = rawName.replace(" County", "");
@@ -144,15 +151,21 @@ export default function MapDisplay({ viewLevel, selectedState, onSelectState, on
           maxZoom={16}
         />
         
-        <ZoomHandler viewLevel={viewLevel} selectedState={selectedState} />
+        <ZoomHandler viewLevel={viewLevel} selectedState={selectedState} addressLookup={addressLookup} txCountyData={txCountyData} />
         <InsetControls onSelectState={onSelectState} />
-
-        {viewLevel === 'federal' && usData && (
-          <GeoJSON data={usData} style={stateStyle} onEachFeature={onEachFeature} />
+        {addressLookup && (
+          <Marker position={[addressLookup.lat, addressLookup.lng]} title="Matched address" alt="Matched address"
+            icon={L.divIcon({ className: 'address-map-marker', html: '<span aria-hidden="true"></span>', iconSize: [24, 24], iconAnchor: [12, 12] })}>
+            <Popup>{addressLookup.matchedAddress}</Popup>
+          </Marker>
         )}
 
-        {(viewLevel === 'state' || viewLevel === 'county') && txCountyData && (
-          <GeoJSON data={txCountyData} style={countyStyle} onEachFeature={onEachFeature} />
+        {viewLevel === 'federal' && usData && (
+          <GeoJSON key="us-states" data={usData} style={stateStyle} onEachFeature={onEachFeature} />
+        )}
+
+        {(viewLevel === 'state' || viewLevel === 'county' || viewLevel === 'address') && txCountyData && (
+          <GeoJSON key="tx-counties" data={txCountyData} style={countyStyle} onEachFeature={onEachFeature} />
         )}
       </MapContainer>
     </div>

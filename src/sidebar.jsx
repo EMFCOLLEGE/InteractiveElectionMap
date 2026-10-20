@@ -4,6 +4,8 @@ import { STATES, countyKey } from './states';
 import { useElectionData } from './useElectionData';
 import RaceList from './RaceList';
 import RaceDetail from './RaceDetail';
+import AddressSearch from './AddressSearch';
+import AddressBallot from './AddressBallot';
 
 const formatDate = (iso, opts) => new Date(iso).toLocaleDateString('en-US', { timeZone: 'UTC', ...opts });
 
@@ -32,24 +34,32 @@ function DataFooter({ data }) {
   );
 }
 
-export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack, onSelectState }) {
+export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBack, onSelectState, addressLookup, onClearAddress, search }) {
   const [selectedRace, setSelectedRace] = useState(null);
+  const [unconfirmedRace, setUnconfirmedRace] = useState(false);
   const { data, error, isLoading } = useElectionData(selectedState);
   const contentRef = useRef(null);
 
   // Leaving a state or county closes any open race.
   useEffect(() => {
     setSelectedRace(null);
-  }, [viewLevel, selectedState, selectedCounty]);
+  }, [viewLevel, selectedState, selectedCounty, addressLookup]);
 
   // Start each view at the top instead of keeping the previous view's scroll position.
   useEffect(() => {
     if (contentRef.current) contentRef.current.scrollTop = 0;
-  }, [selectedRace, viewLevel, selectedState, selectedCounty]);
+  }, [selectedRace, viewLevel, selectedState, selectedCounty, addressLookup]);
+
+  useEffect(() => {
+    if (viewLevel === 'address') {
+      const heading = contentRef.current?.querySelector(selectedRace ? '.race-title' : '#ballot-heading');
+      if (heading) { heading.tabIndex = -1; heading.focus(); }
+    }
+  }, [addressLookup, selectedRace, viewLevel, data]);
 
   const stateName = STATES[selectedState]?.name ?? selectedState;
   const header =
-    viewLevel === 'federal' ? 'United States' : viewLevel === 'state' ? stateName : `${selectedCounty} County`;
+    viewLevel === 'address' ? 'Your Texas ballot' : viewLevel === 'federal' ? 'United States' : viewLevel === 'state' ? stateName : `${selectedCounty} County`;
 
   const renderBody = () => {
     if (viewLevel === 'federal') {
@@ -71,7 +81,20 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
     if (error) return <p className="error-text">Couldn&apos;t load ballot data. Please refresh to try again.</p>;
     if (!data) return <p className="muted">No ballot data for this state yet.</p>;
 
-    if (selectedRace) return <RaceDetail race={selectedRace} electionDate={data.election.date} onBack={() => setSelectedRace(null)} />;
+    if (selectedRace) return (
+      <>
+        {viewLevel === 'address' && unconfirmedRace && <p className="ballot-disclaimer">This county race may not be on your ballot. Confirm your precinct with your official sample ballot.</p>}
+        <RaceDetail race={selectedRace} electionDate={data.election.date} onBack={() => setSelectedRace(null)} />
+      </>
+    );
+
+    if (viewLevel === 'address' && addressLookup) return (
+      <>
+        <AddressBallot data={data} lookup={addressLookup} onClear={() => { onClearAddress(); contentRef.current?.querySelector('.address-search input')?.focus(); }}
+          onSelect={(race, unconfirmed) => { setUnconfirmedRace(unconfirmed); setSelectedRace(race); }} />
+        <DataFooter data={data} />
+      </>
+    );
 
     const races =
       viewLevel === 'county'
@@ -100,7 +123,10 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
       <div className="sidebar-header">
         <h1>{header}</h1>
       </div>
-      <div className="sidebar-content" ref={contentRef}>{renderBody()}</div>
+      <div className="sidebar-content" ref={contentRef}>
+        <AddressSearch {...search} />
+        {renderBody()}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/lookup.js": {
+      "includeFiles": "server/data/tx-districts/**",
+      "maxDuration": 30
+    }
+  }
+}

@@ -8,12 +8,14 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx,mjs --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "data:tx": "node scripts/fetch-tx.mjs"
+    "data:tx": "node scripts/fetch-tx.mjs",
+    "data:tx-districts": "node scripts/fetch-tx-districts.mjs"
   },
   "dependencies": {
     "@deck.gl/geo-layers": "^9.2.9",
     "@deck.gl/layers": "^9.2.9",
     "@deck.gl/react": "^9.2.9",
+    "@turf/boolean-point-in-polygon": "^7.4.0",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -27,6 +29,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "mapshaper": "^0.7.90",
     "vite": "^5.2.0"
   },
   "main": "index.js",

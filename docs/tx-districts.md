@@ -1,0 +1,17 @@
+# Texas address lookup district data
+
+Run `npm run data:tx-districts` to download the Texas Legislative Council shapefiles and regenerate `server/data/tx-districts/`. Commit generator changes separately from generated data. The four plans are PLANC2333 (Congress), PLANS2168 (Senate), PLANH2316 (House), and PLANE2106 (SBOE).
+
+TLC identifies these as the plans for the November 3, 2026 election at https://redistricting.capitol.texas.gov/Current-districts. The congressional stay order is https://www.supremecourt.gov/opinions/25pdf/25a608_7khn.pdf. Do not substitute Census's 119th congressional layer: it describes the previous election's districts.
+
+The generator downloads pinned TLC shapefile resource URLs, imports with `no-topology`, projects to WGS84, and exports GeoJSON without simplification, snapping, quantization, or coordinate rounding. Gzip is lossless. Each feature contains its district number and a bounding box used only to skip impossible matches before point-in-polygon. `manifest.json` records plan names, URLs, source ZIP SHA-256, GeoJSON SHA-256, converter version, district counts, and generation time.
+
+The geometry lives outside `public/` and is included only in `api/lookup.js` via `vercel.json`. Server code loads and caches the four layers, never requests or addresses. An ambiguous boundary match or uncovered point fails closed. Census supplies the matched street location, state and county; its congressional and legislative assignments are ignored. Geocoding is approximate, so voters must confirm with their official sample ballot.
+
+POST JSON `{ "address": "street address, city, TX ZIP" }` to `/api/lookup`. Responses use `Cache-Control: no-store, private`. Addresses are never put in the app URL, stored in localStorage, sent to analytics, or logged by application code. They are sent to Census to geocode. This feature needs no API key.
+
+Run `node --test tests/*.test.js scripts/lib/*.test.mjs` for fixed public-building coordinates, independent TLC District Viewer service comparisons, API errors with a mocked Census fetch, and race filtering. `tests/fixtures/tx-addresses.json` records only public buildings, their official address sources and the exact TLC map-service point queries used for expected districts. These expected results are independent of the generated GeoJSON and local point-in-polygon implementation.
+
+Use `npx -y vercel@latest dev` for local end-to-end testing; plain Vite does not serve the API. Deploy previews with `npx -y vercel@latest deploy` (never `--prod` during review).
+
+The personal guide includes statewide offices, statewide courts, matched federal/legislative/SBOE races that are up, and confirmed countywide offices. County office classification follows Texas Election Code 52.092(e)-(f). Precinct-specific and otherwise unconfirmed county offices appear separately with an eligibility warning. Judicial district races, city/school/other local races, and propositions are not included. ZIP-only lookup is intentionally rejected because ZIPs cross district lines.
