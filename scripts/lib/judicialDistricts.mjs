@@ -4,6 +4,8 @@
 // followed by "(a) The 105th Judicial District is composed of Kenedy, Kleberg, and Nueces counties."
 import { titleCase } from './normalize.mjs';
 
+export { judicialDistrictKey } from '../../src/judicialOffice.js';
+
 const decode = (s) => s
   .replace(/<[^>]+>/g, ' ')
   .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
@@ -16,14 +18,8 @@ export const splitCounties = (list) => list
   .split(/,? AND |, /i)
   .map((name) => titleCase(name.trim()));
 
-// "105th" -> "105", "1-A" -> "1a"; matches SOS office names via judicialDistrictKey.
+// "105th" -> "105", "1-A" -> "1a", the same keys judicialDistrictKey gives SOS office names.
 export const districtKey = (raw) => raw.replace('-', '').toLowerCase();
-
-// "District Judge, 105th Judicial District" -> "105"; "District Judge, Judicial District 1a" -> "1a".
-export function judicialDistrictKey(office) {
-  const m = /^District Judge, (?:(\d+)(?:st|nd|rd|th) Judicial District|Judicial District (\d+-?[a-z]))$/i.exec(office);
-  return m ? districtKey(m[1] ?? m[2]) : null;
-}
 
 export function parseJudicialDistricts(html) {
   const text = decode(html);
