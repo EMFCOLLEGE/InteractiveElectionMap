@@ -6,6 +6,8 @@ import RaceList from './RaceList';
 import RaceDetail from './RaceDetail';
 import AddressSearch from './AddressSearch';
 import AddressBallot from './AddressBallot';
+import VotingInfo from './VotingInfo';
+import { countyElectionLink } from './countyElectionLinks';
 
 const formatDate = (iso, opts) => new Date(iso).toLocaleDateString('en-US', { timeZone: 'UTC', ...opts });
 
@@ -107,6 +109,8 @@ export default function Sidebar({ viewLevel, selectedState, selectedCounty, onBa
         <p className="muted">
           {data.election.name} · {formatDate(data.election.date, { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
+        <VotingInfo stateCode={selectedState} stateName={stateName}
+          countyOffice={viewLevel === 'county' ? countyElectionLink(selectedCounty) : null} />
         {viewLevel === 'county' && (
           <p className="muted small">
             County offices only. Federal, statewide, and district races are listed under {stateName}.

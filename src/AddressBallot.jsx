@@ -1,6 +1,7 @@
 import { ballotForAddress } from './ballotForAddress';
 import RaceList from './RaceList';
 import { countyElectionLink } from './countyElectionLinks';
+import VotingInfo from './VotingInfo';
 
 export default function AddressBallot({ data, lookup, onSelect, onClear }) {
   const { races, otherCountyRaces } = ballotForAddress(data, lookup);
@@ -17,13 +18,10 @@ export default function AddressBallot({ data, lookup, onSelect, onClear }) {
       <button type="button" className="back-btn" onClick={onClear}>Clear / change address</button>
       <div className="ballot-disclaimer">
         <p>Districts are based on official maps; confirm with your official sample ballot.</p>
-        <p>
-          <a href="https://teamrv-mvp.sos.texas.gov/MVP/mvp.do" target="_blank" rel="noreferrer">Texas SOS My Voter Portal</a>
-          {' · '}<a href={countyOffice.url} target="_blank" rel="noreferrer">{countyOffice.label}</a>
-        </p>
         <p>Judicial district races are not yet included; check your sample ballot.</p>
         <p className="small">Street geocoding can be approximate. City, school district, other local elections, and propositions are also outside this guide. A district with no race up this election is omitted.</p>
       </div>
+      <VotingInfo stateCode={lookup.state} stateName="Texas" countyOffice={countyOffice} />
       <RaceList races={races} onSelect={(race) => onSelect(race, false)} />
       {otherCountyRaces.length > 0 && (
         <details className="other-county-races">
