@@ -1,4 +1,4 @@
-import { VOTING_INFO, keyDates, todayIn, votingStatus } from './votingInfo';
+import { VOTING_INFO, keyDates, todayIn, votingStatus } from './votingCalendar';
 
 // "How to vote" panel: where we are in the calendar, key dates, and official links.
 // `countyOffice` ({ url, label }) adds the voter's county elections office when known.

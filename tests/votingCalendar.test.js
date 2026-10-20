@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { VOTING_INFO, keyDates, todayIn, votingStatus } from '../src/votingInfo.js';
+import { VOTING_INFO, keyDates, todayIn, votingStatus } from '../src/votingCalendar.js';
 
 const tx = VOTING_INFO.TX;
 
