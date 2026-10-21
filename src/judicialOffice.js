@@ -10,3 +10,13 @@ export function judicialDistrictKey(office) {
 export function appealsDistrictKey(office) {
   return /^(?:Chief )?Justice, (\d+)(?:st|nd|rd|th) Court of Appeals District(?:, Place \d+)?$/.exec(office)?.[1] ?? null;
 }
+
+// "District Attorney, 268th Judicial District" -> "268". Keys match TX_DISTRICT_ATTORNEYS.
+export function districtAttorneyKey(office) {
+  return /^District Attorney, (\d+)(?:st|nd|rd|th) Judicial District$/.exec(office)?.[1] ?? null;
+}
+
+// "1st Multicounty Court at Law" -> "1". Keys match TX_MULTICOUNTY_COURTS.
+export function multicountyCourtKey(office) {
+  return /^(\d+)(?:st|nd|rd|th) Multicounty Court at Law$/.exec(office)?.[1] ?? null;
+}
