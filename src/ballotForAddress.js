@@ -1,5 +1,6 @@
 import { countyKey } from './states.js';
-import { judicialDistrictKey } from './judicialOffice.js';
+import { appealsDistrictKey, judicialDistrictKey } from './judicialOffice.js';
+import { TX_APPEALS_DISTRICTS } from './txAppealsDistricts.js';
 import { TX_JUDICIAL_DISTRICTS } from './txJudicialDistricts.js';
 
 // County offices vs precinct offices: Texas Election Code 52.092(e)-(f).
@@ -18,6 +19,12 @@ const judicialCounty = (office) => SINGLE_COUNTY_JUDICIAL.exec(office)?.[1] ?? n
 // District courts: every voter in each county of the judicial district votes (Gov't Code ch. 24).
 const inJudicialDistrict = (office, county) =>
   (TX_JUDICIAL_DISTRICTS[judicialDistrictKey(office)] ?? []).some((c) => countyKey(c) === countyKey(county));
+// Courts of appeals: every voter in each county of the district votes (Gov't Code 22.201).
+// A county can sit in two districts, and the 15th covers the whole state.
+const inAppealsDistrict = (office, county) => {
+  const counties = TX_APPEALS_DISTRICTS[appealsDistrictKey(office)];
+  return counties === 'all' || (counties ?? []).some((c) => countyKey(c) === countyKey(county));
+};
 const DISTRICT_CATEGORIES = new Set(['us_house', 'state_senate', 'state_house', 'state_board']);
 const districtKey = (value) => /^\d+$/.test(String(value)) ? String(Number(value)) : null;
 
@@ -37,9 +44,10 @@ export function ballotForAddress(data, lookup) {
       // A county match does not establish precinct eligibility. Keep these separate.
       otherCountyRaces.push(race);
     }
-    // Courts of appeals and judicial-district attorneys still need their own sourced county mappings.
+    // Judicial-district attorneys still need their own sourced county mappings.
     if (race.category === 'judicial') {
-      return countyKey(judicialCounty(race.office)) === countyKey(lookup.county) || inJudicialDistrict(race.office, lookup.county);
+      return countyKey(judicialCounty(race.office)) === countyKey(lookup.county) ||
+        inJudicialDistrict(race.office, lookup.county) || inAppealsDistrict(race.office, lookup.county);
     }
     return false;
   });

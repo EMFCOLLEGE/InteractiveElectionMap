@@ -16,7 +16,10 @@ test('select statewide, correct district and countywide races without changing o
   assert.ok(races.some((r) => /Court of Criminal Appeals/.test(r.office)));
   assert.ok(races.some((r) => r.office === 'County Judge' && r.county === 'Fort Bend'));
   assert.ok(races.some((r) => r.office === 'District Judge, 240th Judicial District'));
-  assert.ok(!races.some((r) => /Court of Appeals|^District Attorney,/.test(r.office)));
+  assert.ok(races.some((r) => r.office === 'Chief Justice, 14th Court of Appeals District'));
+  const appeals = races.map((r) => /^(?:Chief )?Justice, (\d+)\w\w Court of Appeals/.exec(r.office)?.[1]).filter(Boolean);
+  assert.deepEqual([...new Set(appeals)], ['1', '14', '15']);
+  assert.ok(!races.some((r) => /^District Attorney,/.test(r.office)));
   assert.ok(!races.some((r) => /Precinct|Constable|Justice of the Peace/.test(r.office)));
   assert.ok(otherCountyRaces.some((r) => /Commissioner Precinct/.test(r.office)));
   assert.ok(otherCountyRaces.every((r) => r.county === 'Fort Bend'));
@@ -59,11 +62,11 @@ test('include criminal district attorney and court races named for the county on
     .filter((r) => r.category === 'judicial').map((r) => r.office);
   const bexar = judicial('Bexar County');
   assert.ok(bexar.includes('Criminal District Attorney Bexar County'));
-  assert.ok(bexar.every((o) => /Bexar County|^District Judge, /.test(o)));
+  assert.ok(bexar.every((o) => /Bexar County|^District Judge, |Court of Appeals District/.test(o)));
   const dallas = judicial('Dallas');
   assert.ok(dallas.includes('Criminal District Attorney Dallas County'));
   assert.ok(dallas.filter((o) => /^Criminal District Judge,? Dallas County Number \d+$/.test(o)).length >= 4);
-  assert.ok(dallas.every((o) => /Dallas County|^District Judge, /.test(o)));
+  assert.ok(dallas.every((o) => /Dallas County|^District Judge, |Court of Appeals District/.test(o)));
   const tarrant = judicial('Tarrant County');
   assert.ok(tarrant.includes('Criminal District Attorney Tarrant County'));
   assert.ok(tarrant.some((o) => /^Criminal District Judge #\d+ Tarrant County$/.test(o)));
@@ -94,4 +97,26 @@ test('include district judges for every county in the judicial district, and no 
   const all = data.races.filter((r) => r.office.startsWith('District Judge')).map((r) => r.office);
   assert.equal(all.length, 269);
   assert.deepEqual(all.filter((o) => !reached.has(o)), []);
+});
+
+test('include court of appeals races for every county in the district, including overlaps', () => {
+  const appeals = (county) => ballotForAddress(data, { ...lookup, county }).races
+    .filter((r) => /Court of Appeals District/.test(r.office)).map((r) => r.office);
+  const districts = (county) => [...new Set(appeals(county).map((o) => o.match(/(\d+)\w\w Court/)[1]))].sort((a, b) => a - b);
+  // Gov't Code 22.201: Harris is in the 1st and 14th; Travis the 3rd; the 15th is statewide.
+  assert.deepEqual(districts('Harris County'), ['1', '14', '15']);
+  assert.deepEqual(districts('Travis'), ['3', '15']);
+  assert.deepEqual(districts('Loving'), ['8', '15']);
+  // Hunt is in both the 5th and 6th; Gregg in both the 6th and 12th.
+  assert.deepEqual(districts('Hunt'), ['5', '6', '15']);
+  assert.deepEqual(districts('Gregg'), ['6', '12', '15']);
+  assert.ok(appeals('Harris').includes('Justice, 1st Court of Appeals District, Place 3'));
+  assert.ok(appeals('Harris').includes('Chief Justice, 14th Court of Appeals District'));
+  // County criminal courts of appeals are county offices, not courts of appeals districts.
+  assert.ok(!appeals('Dallas').some((o) => /County Criminal/.test(o)));
+  // Every court of appeals race reaches some county.
+  const counties = [...new Set(data.races.filter((r) => r.county).map((r) => r.county))];
+  const reached = new Set(counties.flatMap(appeals));
+  assert.equal(reached.size, data.races.filter((r) => r.category === 'judicial' && /Court of Appeals District/.test(r.office)).length);
+  assert.equal(reached.size, 25);
 });
