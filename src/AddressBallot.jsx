@@ -18,7 +18,7 @@ export default function AddressBallot({ data, lookup, onSelect, onClear }) {
       <button type="button" className="back-btn" onClick={onClear}>Clear / change address</button>
       <div className="ballot-disclaimer">
         <p>Districts are based on official maps; confirm with your official sample ballot.</p>
-        <p>Court of appeals and judicial-district attorney races are not yet included; check your sample ballot.</p>
+        <p>Judicial-district attorney races are not yet included; check your sample ballot.</p>
         <p className="small">Street geocoding can be approximate. City, school district, other local elections, and propositions are also outside this guide. A district with no race up this election is omitted.</p>
       </div>
       <VotingInfo stateCode={lookup.state} stateName="Texas" countyOffice={countyOffice} />
