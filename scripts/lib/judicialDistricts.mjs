@@ -6,7 +6,7 @@ import { titleCase } from './normalize.mjs';
 
 export { judicialDistrictKey } from '../../src/judicialOffice.js';
 
-const decode = (s) => s
+export const decode = (s) => s
   .replace(/<[^>]+>/g, ' ')
   .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
   .replace(/\s+/g, ' ');
