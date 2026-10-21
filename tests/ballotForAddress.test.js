@@ -19,7 +19,7 @@ test('select statewide, correct district and countywide races without changing o
   assert.ok(races.some((r) => r.office === 'Chief Justice, 14th Court of Appeals District'));
   const appeals = races.map((r) => /^(?:Chief )?Justice, (\d+)\w\w Court of Appeals/.exec(r.office)?.[1]).filter(Boolean);
   assert.deepEqual([...new Set(appeals)], ['1', '14', '15']);
-  assert.ok(!races.some((r) => /^District Attorney,/.test(r.office)));
+  assert.deepEqual(races.filter((r) => /^District Attorney,/.test(r.office)).map((r) => r.office), ['District Attorney, 268th Judicial District']);
   assert.ok(!races.some((r) => /Precinct|Constable|Justice of the Peace/.test(r.office)));
   assert.ok(otherCountyRaces.some((r) => /Commissioner Precinct/.test(r.office)));
   assert.ok(otherCountyRaces.every((r) => r.county === 'Fort Bend'));
@@ -119,4 +119,23 @@ test('include court of appeals races for every county in the district, including
   const reached = new Set(counties.flatMap(appeals));
   assert.equal(reached.size, data.races.filter((r) => r.category === 'judicial' && /Court of Appeals District/.test(r.office)).length);
   assert.equal(reached.size, 25);
+});
+
+test('include judicial-district attorneys and multicounty courts for their counties only', () => {
+  const offices = (county) => ballotForAddress(data, { ...lookup, county }).races.map((r) => r.office);
+  const das = (county) => offices(county).filter((o) => o.startsWith('District Attorney,'));
+  // Gov't Code 43.105: the voters of Montgomery County elect the 9th Judicial District attorney.
+  assert.deepEqual(das('Montgomery'), ['District Attorney, 9th Judicial District']);
+  // 43.117: the voters of the 31st Judicial District (Gray, Hemphill, Lipscomb, Roberts, Wheeler, per 24.133).
+  for (const county of ['Gray', 'Hemphill', 'Lipscomb', 'Roberts', 'Wheeler']) {
+    assert.deepEqual(das(county), ['District Attorney, 31st Judicial District'], county);
+  }
+  assert.deepEqual(das('Harris'), []);
+  // 25.2701: Fisher, Mitchell, and Nolan counties compose the 1st Multicounty Court at Law.
+  for (const county of ['Fisher', 'Mitchell', 'Nolan']) assert.ok(offices(county).includes('1st Multicounty Court at Law'), county);
+  assert.ok(!offices('Scurry').includes('1st Multicounty Court at Law'));
+  // Every judicial race on the ballot now reaches the voters of at least one county.
+  const counties = [...new Set(data.races.filter((r) => r.county).map((r) => r.county))];
+  const reached = new Set(counties.flatMap(offices));
+  assert.deepEqual(data.races.filter((r) => r.category === 'judicial' && !reached.has(r.office)).map((r) => r.office), []);
 });

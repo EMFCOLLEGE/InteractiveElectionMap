@@ -1,7 +1,8 @@
 import { countyKey } from './states.js';
-import { appealsDistrictKey, judicialDistrictKey } from './judicialOffice.js';
+import { appealsDistrictKey, districtAttorneyKey, judicialDistrictKey, multicountyCourtKey } from './judicialOffice.js';
 import { TX_APPEALS_DISTRICTS } from './txAppealsDistricts.js';
 import { TX_JUDICIAL_DISTRICTS } from './txJudicialDistricts.js';
+import { TX_DISTRICT_ATTORNEYS, TX_MULTICOUNTY_COURTS } from './txLocalJudicialOffices.js';
 
 // County offices vs precinct offices: Texas Election Code 52.092(e)-(f).
 // https://statutes.capitol.texas.gov/Docs/EL/htm/EL.52.htm#52.092
@@ -25,6 +26,11 @@ const inAppealsDistrict = (office, county) => {
   const counties = TX_APPEALS_DISTRICTS[appealsDistrictKey(office)];
   return counties === 'all' || (counties ?? []).some((c) => countyKey(c) === countyKey(county));
 };
+// Judicial-district attorneys (Gov't Code ch. 43) and multicounty courts at law (ch. 25, subch. D).
+const inCounties = (counties, county) => (counties ?? []).some((c) => countyKey(c) === countyKey(county));
+const inLocalJudicial = (office, county) =>
+  inCounties(TX_DISTRICT_ATTORNEYS[districtAttorneyKey(office)], county) ||
+  inCounties(TX_MULTICOUNTY_COURTS[multicountyCourtKey(office)], county);
 const DISTRICT_CATEGORIES = new Set(['us_house', 'state_senate', 'state_house', 'state_board']);
 const districtKey = (value) => /^\d+$/.test(String(value)) ? String(Number(value)) : null;
 
@@ -44,10 +50,10 @@ export function ballotForAddress(data, lookup) {
       // A county match does not establish precinct eligibility. Keep these separate.
       otherCountyRaces.push(race);
     }
-    // Judicial-district attorneys still need their own sourced county mappings.
     if (race.category === 'judicial') {
       return countyKey(judicialCounty(race.office)) === countyKey(lookup.county) ||
-        inJudicialDistrict(race.office, lookup.county) || inAppealsDistrict(race.office, lookup.county);
+        inJudicialDistrict(race.office, lookup.county) || inAppealsDistrict(race.office, lookup.county) ||
+        inLocalJudicial(race.office, lookup.county);
     }
     return false;
   });
